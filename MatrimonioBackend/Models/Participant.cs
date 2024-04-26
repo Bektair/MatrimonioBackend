@@ -11,6 +11,6 @@ namespace MatrimonioBackend.Models
         public User User { get; set; }
 
         public Wedding Wedding { get; set; }
-        public int WeddingId { get; set; } //Wedding is dependent Class
+        public int WeddingId { get; set; }
     }
 }

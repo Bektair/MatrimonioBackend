@@ -1,11 +1,12 @@
-﻿namespace MatrimonioBackend.DTOs
+﻿namespace MatrimonioBackend.DTOs.User
 {
-    public class GetUserDTO
+    public class UserCreateDTO
     {
-        public int Id { get; set; }
 
         public string Username { get; set; }
 
         public string Keycloakid { get; set; }
+
+
     }
 }

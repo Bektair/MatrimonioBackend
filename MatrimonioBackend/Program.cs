@@ -1,7 +1,9 @@
 
 
 
-using MySqlManager.Repository;
+using MatrimonioBackend.Controllers.Repository;
+using MatrimonioBackend.DAL;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -11,8 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+
+//builder.Services.AddDbContext<WeddingContext>(opt => opt.UseSqlServer(connectionString));
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 

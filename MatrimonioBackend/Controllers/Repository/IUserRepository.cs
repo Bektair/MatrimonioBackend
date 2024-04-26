@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MySqlManager.Repository
+namespace MatrimonioBackend.Controllers.Repository
 {
-    public interface IUserRepository :IDisposable
+    public interface IUserRepository : IDisposable
     {
         IEnumerable<User> GetAll();
 

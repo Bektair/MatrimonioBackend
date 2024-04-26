@@ -22,7 +22,6 @@ namespace MatrimonioBackend.DAL
         {
             optionsBuilder.UseSqlServer("Data Source=(local),1433;Initial Catalog=Matrimonio;Integrated Security=False;User ID=sa;Password=1001Spill+;Encrypt=False");
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Location>()
