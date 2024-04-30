@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MatrimonioBackend.DTOs.Wedding;
-using MySqlManager.Models;
+using MatrimonioBackend.Models;
 
 namespace MatrimonioBackend.Profiles
 {

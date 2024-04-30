@@ -1,17 +1,13 @@
 ﻿namespace MatrimonioBackend.DTOs.RSVP
 {
-    public class RSVPCreateDTO
+    public class RSVPReadDTO
     {
-
+        public int Id { get; set; }
         public string Body { get; set; }
         public DateTime Deadline { get; set; }
 
         public string Status { get; set; }
         public int NumberOfGuests { get; set; }
         public string DietaryRequirements { get; set; }
-
-        public int SignerId { get; set; }
-        public int WeddingId { get; set; }
-
     }
 }

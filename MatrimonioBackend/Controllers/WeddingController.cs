@@ -7,11 +7,10 @@ using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using MySqlManager.Models;
 
 namespace MatrimonioBackend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [ApiController]
     public class WeddingController : ControllerBase
     {
@@ -32,6 +31,16 @@ namespace MatrimonioBackend.Controllers
             return Ok(weddingDTOs);
         }
 
+
+        [HttpGet("{wedding_id}")]
+        public ActionResult<IEnumerable<WeddingGetDTO>> GetWeddingById(int wedding_id)
+        {
+            var wedding = unitOfWork.WeddingRepository.GetByID(wedding_id);
+            var weddingDTO = _mapper.Map<WeddingGetDTO>(wedding);
+
+            return Ok(weddingDTO);
+        }
+
         [HttpPost("")]
         public ActionResult<WeddingGetDTO> CreateWedding(WeddingCreateDTO createWeddingDTO)
         {
@@ -40,7 +49,7 @@ namespace MatrimonioBackend.Controllers
             unitOfWork.WeddingRepository.Insert(wedding);
             unitOfWork.Save();
 
-            return CreatedAtAction("CreateWedding", new { id = wedding.Id }, wedding);
+            return CreatedAtAction("GetWeddingById", new { wedding_id = wedding.Id }, _mapper.Map<WeddingGetDTO>(wedding));
         }
 
         [HttpPut("")]
@@ -61,7 +70,7 @@ namespace MatrimonioBackend.Controllers
             return NoContent();
         }
 
-        [HttpPost("/participant")]
+        [HttpPost("participant")]
         public ActionResult CreateParticipant(int user_id, int wedding_id, string role)
         {
             var participant = new Participant() { UserId = user_id, WeddingId = wedding_id, Role = role };
@@ -72,7 +81,7 @@ namespace MatrimonioBackend.Controllers
             return NoContent();
         }
 
-        [HttpGet("/participants/{wedding_id}")]
+        [HttpGet("participants/{wedding_id}")]
         public ActionResult<IEnumerable<Participant>> GetParticipants(int wedding_id, string role="")
         {
             IEnumerable<Participant> participants;
@@ -84,7 +93,7 @@ namespace MatrimonioBackend.Controllers
             return Ok(participants);
         }
 
-        [HttpGet("/participants/{wedding_id}/{user_id}")]
+        [HttpGet("participants/{wedding_id}/{user_id}")]
         public ActionResult<IEnumerable<Participant>> GetParticipant(int wedding_id, int user_id)
         {
             var participant = unitOfWork.ParticipantRepository.GetByIDComposite([wedding_id, user_id]);
@@ -92,7 +101,7 @@ namespace MatrimonioBackend.Controllers
             return Ok(participant);
         }
 
-        [HttpPut("/participants")]
+        [HttpPut("participants")]
         public ActionResult UpdateParticipant(ParticipantUpdateDTO participant)
         {
             

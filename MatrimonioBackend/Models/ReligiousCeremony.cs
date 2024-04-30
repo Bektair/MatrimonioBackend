@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MySqlManager.Models
+namespace MatrimonioBackend.Models
 {
     public class ReligiousCeremony
     {
@@ -16,8 +16,8 @@ namespace MySqlManager.Models
         public int LocationId { get; set; }
         public Location Location { get; set; }
 
-        public Wedding? Wedding { get; set; }
-        public int? WeddingId { get; set; } //Wedding is dependent Class
+        public Wedding Wedding { get; set; }
+        public int WeddingId { get; set; } 
 
     }
 }

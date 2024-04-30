@@ -47,12 +47,12 @@ namespace MatrimonioBackend.DAL
             }
         }
 
-        public virtual TEntity GetByID(object id)
+        public virtual TEntity? GetByID(object id)
         {
             return dbSet.Find(id);
         }
 
-        public virtual TEntity GetByIDComposite(object[] ids)
+        public virtual TEntity? GetByIDComposite(object[] ids)
         {
             return dbSet.Find(ids);
         }
@@ -64,10 +64,18 @@ namespace MatrimonioBackend.DAL
 
         }
 
-        public virtual void Delete(object id)
+        public virtual bool Delete(object id)
         {
-            TEntity entityToDelete = dbSet.Find(id);
-            Delete(entityToDelete);
+            TEntity? entityToDelete = dbSet.Find(id);
+
+            if(entityToDelete != null) { 
+                Delete(entityToDelete);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public virtual void Delete(TEntity entityToDelete)

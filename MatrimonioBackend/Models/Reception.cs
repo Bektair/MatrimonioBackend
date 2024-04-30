@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MySqlManager.Models
+namespace MatrimonioBackend.Models
 {
     public class Reception
     {

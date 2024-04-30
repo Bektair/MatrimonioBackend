@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MySqlManager.Models
+namespace MatrimonioBackend.Models
 {
     public class RSVP
     {
@@ -20,7 +20,7 @@ namespace MySqlManager.Models
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
 
-        public User Signer{ get; set; }
+        public User Signer { get; set; }
         public int SignerId { get; set; }
 
 

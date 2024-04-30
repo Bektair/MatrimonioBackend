@@ -1,5 +1,4 @@
-﻿using MySqlManager.Models;
-
+﻿
 namespace MatrimonioBackend.Models
 {
     public class Participant

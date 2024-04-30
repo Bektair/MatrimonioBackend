@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
-using MatrimonioBackend.Controllers.Repository;
 using MatrimonioBackend.DTOs.User;
+using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MySqlManager.Models;
 
 namespace MatrimonioBackend.Controllers
 {
