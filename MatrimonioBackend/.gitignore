@@ -1,2 +1,2 @@
 # Make deployfile visible
-!.choreo/
+.env
