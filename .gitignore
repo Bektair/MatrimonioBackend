@@ -365,4 +365,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Make deployfile visible
-!.choreo
+!.choreo/*
