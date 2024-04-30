@@ -20,7 +20,7 @@ namespace MatrimonioBackend.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_DATA_SOURCE"));
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATA_SOURCE"));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
