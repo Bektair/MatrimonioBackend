@@ -20,6 +20,14 @@ static IEdmModel GetEdmModel()
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
+builder.Host.ConfigureAppConfiguration((configBuilder) =>
+{
+    configBuilder.Sources.Clear();
+    DotEnv.Load();
+    configBuilder.AddEnvironmentVariables();
+});
+
+
 builder.Services.AddControllers()
     .AddOData(options => options
         .Select()
@@ -33,7 +41,6 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-DotEnv.Load();
 builder.Services.AddTransient<IStudentservice, StudentService>();
 
 //builder.Services.AddDbContext<WeddingContext>(opt => opt.UseSqlServer(connectionString));
