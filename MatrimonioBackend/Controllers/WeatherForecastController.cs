@@ -1,3 +1,4 @@
+using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonioBackend.Controllers

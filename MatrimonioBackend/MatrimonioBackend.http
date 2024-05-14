@@ -1,6 +1,12 @@
-@MatrimonioBackend_HostAddress = http://localhost:5261
+@MatrimonioBackend_HostAddress = https://localhost:44385
 
-GET {{MatrimonioBackend_HostAddress}}/weatherforecast/
+GET {{MatrimonioBackend_HostAddress}}/odata/$metadata#Post
 Accept: application/json
 
 ###
+GET {{MatrimonioBackend_HostAddress}}/api/Post
+Accept: application/json
+
+###
+GET {{MatrimonioBackend_HostAddress}}/odata/Post
+Accept: application/json

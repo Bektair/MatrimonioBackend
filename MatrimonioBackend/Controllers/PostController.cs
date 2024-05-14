@@ -2,15 +2,18 @@
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Post;
 using MatrimonioBackend.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
+using System.Linq.Expressions;
 
 namespace MatrimonioBackend.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
-    public class PostController : ControllerBase
+    public class PostController : ODataController
     {
 
         IMapper _mapper;
@@ -29,13 +32,18 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("")]
+        [EnableQuery]
+        [Authorize]
         public ActionResult<IEnumerable<Post>> Get()
         {
+//            Expression<Func<TEntity, bool>> filter = null, //We send in a lambda expression based on entity ex. student => student.LastName == "Smith"
+
             var posts = _unitOfWork.PostRepository.Get();
-
+            
             return Ok(posts);
-
         }
+
+
 
         [HttpPost("")]
         public ActionResult<PostReadDTO> Create(PostCreateDTO postCreate)

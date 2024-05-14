@@ -5,6 +5,7 @@ using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace MatrimonioBackend.Controllers
 {
@@ -27,6 +28,7 @@ namespace MatrimonioBackend.Controllers
             return _mapper.Map<LocationReadDTO>(Location);
         }
 
+    [EnableQuery]
         [HttpGet("")]
         public ActionResult<IEnumerable<LocationReadDTO>> GetLocations()
         {

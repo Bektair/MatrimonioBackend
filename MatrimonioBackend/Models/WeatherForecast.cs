@@ -1,4 +1,4 @@
-namespace MatrimonioBackend
+namespace MatrimonioBackend.Models
 {
     public class WeatherForecast
     {
