@@ -2,7 +2,7 @@ name: Build and deploy .NET Core application to Web App MatrimonioBackend2024043
 on:
   push:
     branches:
-    - InitialController
+    - master
 env:
   AZURE_WEBAPP_NAME: MatrimonioBackend20240430143958
   AZURE_WEBAPP_PACKAGE_PATH: MatrimonioBackend\publish
