@@ -27,6 +27,7 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
     configBuilder.AddEnvironmentVariables();
 });
 
+var domain = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
 builder.Services.AddControllers()
     .AddOData(options => options
@@ -70,6 +71,13 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
         .AllowAnyOrigin()
         .AllowAnyHeader(); // Can add client_origin_url here.
 }));
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("read:posts", policy =>
+    policy.Requirements.Add(new HasScopeRequirement("read:posts", domain)));
+});
 
 var app = builder.Build();
 

@@ -2,6 +2,7 @@
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.User;
 using MatrimonioBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace MatrimonioBackend.Controllers
 
         // GET: UserController
         [HttpGet("")]
+        [Authorize("read:users")]
         public ActionResult<IEnumerable<User>> GetUsers () 
         {
             return Ok(UnitOfWork.UserRepository.Get());
