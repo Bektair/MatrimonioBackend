@@ -1,3 +1,2 @@
 # Make deployfile visible
 .env
-MySqlManager/*
