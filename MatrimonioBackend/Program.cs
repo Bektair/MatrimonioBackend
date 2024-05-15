@@ -2,11 +2,13 @@ using dotenv.net;
 using MatrimonioBackend.Models;
 using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.OData;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Newtonsoft.Json;
+using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
@@ -76,12 +78,13 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("read:users", policy =>
-    policy.Requirements.Add(new HasScopeRequirement("read:users", domain)));
+        policy.Requirements.Add(new HasScopeRequirement("read:users", "https://dev-fnrkz1kw46cdu7zy.us.auth0.com/")));
 });
+
+builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 var app = builder.Build();
 
-app.UseCors("MyPolicy");
 
 
 // Configure the HTTP request pipeline.
@@ -94,8 +97,11 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-
+app.UseCors("MyPolicy");
+//app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 
