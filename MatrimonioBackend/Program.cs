@@ -29,7 +29,7 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
     configBuilder.AddEnvironmentVariables();
 });
 
-var domain = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
+var AUTH0_DOMAIN = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
 builder.Services.AddControllers()
     .AddOData(options => options
@@ -56,7 +56,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               builder.Configuration.GetValue<string>("AUTH0_AUDIENCE");
 
         options.Authority =
-              $"https://{builder.Configuration.GetValue<string>("AUTH0_DOMAIN")}/";
+              $"https://{AUTH0_DOMAIN}/";
         options.Audience = audience;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -78,7 +78,7 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("read:users", policy =>
-        policy.Requirements.Add(new HasScopeRequirement("read:users", "https://dev-fnrkz1kw46cdu7zy.us.auth0.com/")));
+        policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://{AUTH0_DOMAIN}/")));
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
