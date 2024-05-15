@@ -75,8 +75,8 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("read:posts", policy =>
-    policy.Requirements.Add(new HasScopeRequirement("read:posts", domain)));
+    options.AddPolicy("read:users", policy =>
+    policy.Requirements.Add(new HasScopeRequirement("read:users", domain)));
 });
 
 var app = builder.Build();
