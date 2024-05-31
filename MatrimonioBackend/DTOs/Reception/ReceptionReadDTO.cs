@@ -1,4 +1,6 @@
-﻿namespace MatrimonioBackend.DTOs.Reception
+﻿using MatrimonioBackend.DTOs.Location;
+
+namespace MatrimonioBackend.DTOs.Reception
 {
     public class ReceptionReadDTO
     {
@@ -7,7 +9,7 @@
         public string Description { get; set; }
 
         //Nav properties
-        public int LocationId { get; set; }
+        public LocationReadDTO Location{ get; set; }
         public int? WeddingId { get; set; }
     }
 }

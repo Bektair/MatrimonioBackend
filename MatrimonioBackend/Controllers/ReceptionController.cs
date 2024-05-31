@@ -31,7 +31,7 @@ namespace MatrimonioBackend.Controllers
         [HttpGet("")]
         public ActionResult<IEnumerable<ReceptionReadDTO>> GetReceptions(){
 
-            var Receptions = _unitOfWork.ReceptionRepository.Get();
+            var Receptions = _unitOfWork.ReceptionRepository.Get(null, null, "Location");
             return _mapper.Map<List<ReceptionReadDTO>>(Receptions);
         }
 

@@ -6,6 +6,7 @@ using MatrimonioBackend.DTOs.Participant;
 using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MatrimonioBackend.Controllers
@@ -23,6 +24,7 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("")]
+        [EnableQuery]
         public ActionResult<IEnumerable<WeddingGetDTO>> GetWeddings()
         {
             var weddings = unitOfWork.WeddingRepository.Get();

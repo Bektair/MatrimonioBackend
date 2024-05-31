@@ -4,6 +4,7 @@ using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace MatrimonioBackend.Controllers
 {
@@ -27,6 +28,7 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("")]
+        [EnableQuery]
         public ActionResult<IEnumerable<ReligiousCeremonyReadDTO>> GetReligiousCeremonys()
         {
 
