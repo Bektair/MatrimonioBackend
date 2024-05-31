@@ -9,7 +9,9 @@ namespace MatrimonioBackend.Profiles
 
         public RSVPProfile()
         {
-            CreateMap<RSVPCreateDTO, RSVP>();
+         
+            CreateMap<RSVPCreateDTO, RSVP>().ForMember(dest => dest.Deadline, opt => opt.MapFrom<CustomRSVPResolver>());
+
             CreateMap<RSVP, RSVPReadDTO>();
 
         }

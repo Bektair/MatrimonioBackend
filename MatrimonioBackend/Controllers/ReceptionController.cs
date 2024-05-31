@@ -5,6 +5,7 @@ using MatrimonioBackend.DTOs.Reception;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Extensions.Hosting;
 
 namespace MatrimonioBackend.Controllers
@@ -29,6 +30,7 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("")]
+        [EnableQuery]
         public ActionResult<IEnumerable<ReceptionReadDTO>> GetReceptions(){
 
             var Receptions = _unitOfWork.ReceptionRepository.Get(null, null, "Location");

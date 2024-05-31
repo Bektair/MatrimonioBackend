@@ -4,7 +4,7 @@
     {
 
         public string Body { get; set; }
-        public DateTime Deadline { get; set; }
+        public long Deadline { get; set; }
 
         public string Status { get; set; }
         public int NumberOfGuests { get; set; }

@@ -3,6 +3,7 @@ using Azure;
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using MatrimonioBackend.Profiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,8 @@ namespace MatrimonioBackend.Controllers
         [HttpPost("")]
         public ActionResult CreateRSVP(RSVPCreateDTO rSVPCreateDTO)
         {
+     
+
             var rsvp = _mapper.Map<RSVP>(rSVPCreateDTO);
 
             unitOfWork.RSVPRepository.Insert(rsvp);
