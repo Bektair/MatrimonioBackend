@@ -1,3 +1,6 @@
+
+using MatrimonioBackend.DTOs.Location;
+
 namespace MatrimonioBackend.DTOs.ReligiousCeremony
 {
     public class ReligiousCeremonyReadDTO
@@ -7,7 +10,8 @@ namespace MatrimonioBackend.DTOs.ReligiousCeremony
         public string Description { get; set; }
 
         //Nav properties
-        public int LocationId { get; set; }
+        public LocationReadDTO Location { get; set; }
+
         public int WeddingId { get; set; }
     }
 

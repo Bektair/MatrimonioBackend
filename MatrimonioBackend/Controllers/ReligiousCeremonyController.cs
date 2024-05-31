@@ -30,7 +30,8 @@ namespace MatrimonioBackend.Controllers
         public ActionResult<IEnumerable<ReligiousCeremonyReadDTO>> GetReligiousCeremonys()
         {
 
-            var ReligiousCeremonys = _unitOfWork.ReligiousCeremonyRepository.Get();
+            var ReligiousCeremonys = _unitOfWork.ReligiousCeremonyRepository.Get(null,null,"Location");
+
             return _mapper.Map<List<ReligiousCeremonyReadDTO>>(ReligiousCeremonys);
         }
 
