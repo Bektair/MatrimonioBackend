@@ -7,6 +7,7 @@ using MatrimonioBackend.Profiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using static MatrimonioBackend.Models.RSVPExtension;
 
 namespace MatrimonioBackend.Controllers
@@ -24,10 +25,33 @@ namespace MatrimonioBackend.Controllers
             _mapper = mapper;
         }
 
+        [EnableQuery]
         [HttpGet("")]
-        public ActionResult GetRSVPsByWedding(int wedding_id)
+        public ActionResult GetRSVPsByWedding()
         {
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId == wedding_id);
+            var RSVPs = unitOfWork.RSVPRepository.Get();
+
+            var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
+
+            return Ok(readRsvps);
+        }
+
+        [HttpGet("{wedding_id}/{signer_id}")]
+        public ActionResult GetRSVPsByWedding(string wedding_id, string signer_id)
+        {
+
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id));
+
+            var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
+
+            return Ok(readRsvps);
+        }
+
+        [HttpGet("{wedding_id}")]
+        public ActionResult GetRSVPsByWedding(string wedding_id)
+        {
+
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id);
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 

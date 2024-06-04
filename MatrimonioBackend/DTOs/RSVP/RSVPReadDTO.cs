@@ -9,5 +9,7 @@
         public string Status { get; set; }
         public int NumberOfGuests { get; set; }
         public string DietaryRequirements { get; set; }
+
+
     }
 }
