@@ -28,7 +28,10 @@ namespace MatrimonioBackend.Controllers
         public ActionResult GetRSVPsByWedding(int wedding_id)
         {
             var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId == wedding_id);
-            return Ok(RSVPs);
+
+            var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
+
+            return Ok(readRsvps);
         }
 
         [HttpPost("")]
