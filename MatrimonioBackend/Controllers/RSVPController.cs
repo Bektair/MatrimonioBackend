@@ -29,7 +29,7 @@ namespace MatrimonioBackend.Controllers
         [HttpGet("")]
         public ActionResult GetRSVPsByWedding()
         {
-            var RSVPs = unitOfWork.RSVPRepository.Get();
+            var RSVPs = unitOfWork.RSVPRepository.Get(null, null, "Signer");
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 
@@ -40,7 +40,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult GetRSVPsByWedding(string wedding_id, string signer_id)
         {
 
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id));
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id) , null, "Signer");
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 
@@ -51,7 +51,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult GetRSVPsByWedding(string wedding_id)
         {
 
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id);
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id, null, "Signer");
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 
@@ -61,12 +61,7 @@ namespace MatrimonioBackend.Controllers
         [HttpPost("")]
         public ActionResult CreateRSVP(RSVPCreateDTO rSVPCreateDTO)
         {
-
-           
             var rsvp = _mapper.Map<RSVP>(rSVPCreateDTO);
-
-
-
             unitOfWork.RSVPRepository.Insert(rsvp);
             unitOfWork.Save();
 

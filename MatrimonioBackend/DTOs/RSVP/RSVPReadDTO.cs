@@ -1,4 +1,6 @@
-﻿namespace MatrimonioBackend.DTOs.RSVP
+﻿using MatrimonioBackend.DTOs.User;
+
+namespace MatrimonioBackend.DTOs.RSVP
 {
     public class RSVPReadDTO
     {
@@ -10,6 +12,7 @@
         public int NumberOfGuests { get; set; }
         public string DietaryRequirements { get; set; }
 
+        public UserGetDTO Signer { get; set; }
 
     }
 }
