@@ -20,8 +20,8 @@ namespace MatrimonioBackend.Models
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
 
-        public User Signer { get; set; }
-        public int SignerId { get; set; }
+        public MarryMonioUser Signer { get; set; }
+        public Guid SignerId { get; set; }
 
 
 

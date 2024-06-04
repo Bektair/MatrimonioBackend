@@ -73,7 +73,7 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpPost("participant")]
-        public ActionResult CreateParticipant(int user_id, int wedding_id, string role)
+        public ActionResult CreateParticipant(Guid user_id, int wedding_id, string role)
         {
             var participant = new Participant() { UserId = user_id, WeddingId = wedding_id, Role = role };
 

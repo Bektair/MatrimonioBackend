@@ -34,9 +34,11 @@ namespace MatrimonioBackend.Controllers
         [HttpPost("")]
         public ActionResult CreateRSVP(RSVPCreateDTO rSVPCreateDTO)
         {
-     
 
+           
             var rsvp = _mapper.Map<RSVP>(rSVPCreateDTO);
+
+
 
             unitOfWork.RSVPRepository.Insert(rsvp);
             unitOfWork.Save();

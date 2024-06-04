@@ -25,7 +25,7 @@ namespace MatrimonioBackend.Controllers
         // GET: UserController
         [HttpGet("")]
         [Authorize("read:users")]
-        public ActionResult<IEnumerable<User>> GetUsers () 
+        public ActionResult<IEnumerable<MarryMonioUser>> GetUsers () 
         {
             return Ok(UnitOfWork.UserRepository.Get());
         }
@@ -38,7 +38,7 @@ namespace MatrimonioBackend.Controllers
 
             var user = UnitOfWork.UserRepository.GetByID(user_id);
 
-            return Ok(_mapper.Map<User, UserGetDTO>(user));
+            return Ok(_mapper.Map<MarryMonioUser, UserGetDTO>(user));
         }
 
 
@@ -47,7 +47,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult<UserCreateDTO> CreateUser(UserCreateDTO createUser)
         {
 
-            var user = _mapper.Map<UserCreateDTO, User>(createUser);
+            var user = _mapper.Map<UserCreateDTO, MarryMonioUser>(createUser);
             UnitOfWork.UserRepository.Insert(user);
 
             UnitOfWork.Save();

@@ -1,4 +1,7 @@
-﻿namespace MatrimonioBackend.DTOs.RSVP
+﻿
+using Newtonsoft.Json;
+
+namespace MatrimonioBackend.DTOs.RSVP
 {
     public class RSVPCreateDTO
     {
@@ -9,8 +12,7 @@
         public string Status { get; set; }
         public int NumberOfGuests { get; set; }
         public string DietaryRequirements { get; set; }
-
-        public int SignerId { get; set; }
+        public Guid SignerId { get; set; }
         public int WeddingId { get; set; }
 
     }

@@ -12,7 +12,7 @@ namespace MatrimonioBackend.DAL
         public DbSet<ReligiousCeremony> ReligiousCeremony { get; set; }
         public DbSet<Wedding> Wedding { get; set; }
         public DbSet<RSVP> RSVP { get; set; }
-        public DbSet<User> User { get; set; }
+        public DbSet<MarryMonioUser> MarryMonioUser { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Participant> Participant { get; set; }
 
@@ -78,11 +78,16 @@ namespace MatrimonioBackend.DAL
                 .HasForeignKey(e => e.WeddingId)
                 .IsRequired();
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<MarryMonioUser>()
                 .HasMany(e => e.Posts)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
                 .IsRequired();
+            modelBuilder.Entity<MarryMonioUser>().HasIndex(user => user.Email)
+                .IsUnique();
+            modelBuilder.Entity<MarryMonioUser>().Property(user => user.Id).HasDefaultValueSql("gen_random_uuid()"); //Postgres specific way of generating UUID v4
+
+            modelBuilder.Entity<MarryMonioUser>().Property(user => user.Email_Verified).HasDefaultValue(false);
 
 
             modelBuilder.Entity<Post>()
@@ -102,20 +107,20 @@ namespace MatrimonioBackend.DAL
         public ModelBuilder seedData(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<User>()
-                .HasData(new User { Id = 1, FirstName = "Johnny", LastName="Depp", Keycloakid = "12345678-1234-1234-1234-123412341234", Email = "123@gmail.com" });
-            modelBuilder.Entity<User>()
-                .HasData(new User { Id = 2, FirstName = "Amber", LastName="Heard", Keycloakid = "12345678-1234-1234-1234-123412341234", Email = "123@gmail.com" });
+            modelBuilder.Entity<MarryMonioUser>()
+                .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341231"), Password= "$2b$10$5Lg7sMrtqv6Wrwmg5RczxezpgXmb5CCXn1q4bqBO1YwLar6kuC/6S", FirstName = "Johnny", LastName="Depp", Nickname="Sparrow", Email_Verified = true, Email = "1231@gmail.com" });
+            modelBuilder.Entity<MarryMonioUser>()
+                .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341232"), Password = "$2b$10$Gadpk8GCgZE.dyzZFMHATOB0FT37Lt4DvBo4cO5PZ.0esE/7CrEK2", FirstName = "Amber", LastName="Heard", Nickname= "Amear", Email_Verified = true, Email = "1232@gmail.com" });
 
-            modelBuilder.Entity<User>()
-                .HasData(new User { Id = 3, FirstName = "Ola", LastName = "Nordmann", Keycloakid = "12345678-1234-1234-1234-123412341234", Email = "123@gmail.com" });
-            modelBuilder.Entity<User>()
-                .HasData(new User { Id = 4, FirstName = "Kari", LastName = "Larsen", Keycloakid = "12345678-1234-1234-1234-123412341234", Email = "123@gmail.com" });
+            modelBuilder.Entity<MarryMonioUser>()
+                .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341233"), Password = "$2b$10$qeC9UbUklFhIZDpAKloBxO0pKerSvBdlZT.NoQHDgFwljAUWc35ra", FirstName = "Ola", LastName = "Nordmann", Nickname="Norsken", Email_Verified = true, Email = "1233@gmail.com" });
+            modelBuilder.Entity<MarryMonioUser>()
+                .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341234"), Password = "$2b$10$1hv7NchwECRiJ34DMUMPxuib2jfgADfqK6U1P.DNyLIMhMcirfC36", FirstName = "Kari", LastName = "Larsen", Nickname="Flau", Email_Verified = true, Email = "1234@gmail.com" });
 
-            modelBuilder.Entity<User>()
-             .HasData(new User { Id = 5, FirstName = "Piler", LastName = "Heard", Keycloakid = "12345678-1234-1234-1234-123412341234", Email = "123@gmail.com" });
-            modelBuilder.Entity<User>()
-             .HasData(new User { Id = 6, FirstName = "Lise", LastName = "Larsen", Keycloakid = "12345678-1234-1234-1234-123412341234", Email = "123@gmail.com" });
+            modelBuilder.Entity<MarryMonioUser>()
+             .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341235"), Password = "$2b$10$XFQAF6s8DTFRmVfUXf4LDeZFtwS68TOfx6hgv8DfsvNCmuweCeC7.", FirstName = "Piler", LastName = "Heard", Nickname="Smear", Email_Verified = true, Email = "1235@gmail.com" });
+            modelBuilder.Entity<MarryMonioUser>()
+             .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341236"), Password = "$2b$10$ZOlVhh3DI.fQNrWg04Pli.cw7CcI9VAMSApGSR8l14uBNCN5KMvvq", FirstName = "Lise", LastName = "Larsen",Nickname="Stokk", Email_Verified = true, Email = "1236@gmail.com" });
 
 
 
@@ -125,19 +130,19 @@ namespace MatrimonioBackend.DAL
                 .HasData(new Wedding { Id = 2, Description = "Samler hele familien for ett flott bryllup, vi skal være sammen for alltid", Dresscode = "Bunad" });
 
             modelBuilder.Entity<Participant>()
-                .HasData(new Participant() { UserId = 1, WeddingId = 1, Role = "Husband" });
+                .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341231"), WeddingId = 1, Role = "Husband" });
             modelBuilder.Entity<Participant>()
-                .HasData(new Participant() { UserId = 2, WeddingId = 1, Role = "Wife" });
+                .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341232"), WeddingId = 1, Role = "Wife" });
 
             modelBuilder.Entity<Participant>()
-                .HasData(new Participant() { UserId = 3, WeddingId = 2, Role = "Ektemann" });
+                .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341233"), WeddingId = 2, Role = "Ektemann" });
             modelBuilder.Entity<Participant>()
-                .HasData(new Participant() { UserId = 4, WeddingId = 2, Role = "Kone" });
+                .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341234"), WeddingId = 2, Role = "Kone" });
 
             modelBuilder.Entity<Participant>()
-                .HasData(new Participant() { UserId = 5, WeddingId = 1, Role = "Guest" });
+                .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341235"), WeddingId = 1, Role = "Guest" });
             modelBuilder.Entity<Participant>()
-                .HasData(new Participant() { UserId = 6, WeddingId = 2, Role = "Gjest" });
+                .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341236"), WeddingId = 2, Role = "Gjest" });
 
 
             modelBuilder.Entity<Location>()
@@ -172,9 +177,9 @@ namespace MatrimonioBackend.DAL
 
 
             modelBuilder.Entity<Post>()
-                .HasData(new Post() { Id = 1, AuthorId = 1, WeddingId = 1, Body = "Funky times, we will have loads of dance and party!!", Title = "PARTY!" });
+                .HasData(new Post() { Id = 1, AuthorId = new Guid("12345678-1234-1234-1234-123412341231"), WeddingId = 1, Body = "Funky times, we will have loads of dance and party!!", Title = "PARTY!" });
             modelBuilder.Entity<Post>()
-                .HasData(new Post() { Id = 2, AuthorId = 3, WeddingId = 2, Body = "Hei, vi ønsker oss disse gavene: - Penger, Gavekort", Title = "Gaveliste" });
+                .HasData(new Post() { Id = 2, AuthorId = new Guid("12345678-1234-1234-1234-123412341233"), WeddingId = 2, Body = "Hei, vi ønsker oss disse gavene: - Penger, Gavekort", Title = "Gaveliste" });
 
             modelBuilder.Entity<PostImage>()
                 .HasData(new PostImage() { Id = 1, PostId = 1, URI = "https://no.wikipedia.org/wiki/Johnny_Depp#/media/Fil:Johnny_Depp_2020.jpg", Role = "MainImage", Size = "245kb" });
@@ -186,17 +191,17 @@ namespace MatrimonioBackend.DAL
                 .HasData(new PostImage() { Id = 4, PostId = 2, URI = "https://upload.wikimedia.org/wikipedia/commons/9/9d/Red_Christmas_present_on_white_background.jpg", Role = "MainImage", Size = "155kb" });
 
             modelBuilder.Entity<RSVP> ()
-                .HasData(new RSVP() { Id = 1, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = 5, Deadline=DateTime.UtcNow.AddDays(14), NumberOfGuests=1, Status="Pending", DietaryRequirements="None"});
+                .HasData(new RSVP() { Id = 1, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341235"), Deadline=DateTime.UtcNow.AddDays(14), NumberOfGuests=1, Status="Pending", DietaryRequirements="None"});
             modelBuilder.Entity<RSVP>()
-               .HasData(new RSVP() { Id = 2, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = 1, Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = "Coming", DietaryRequirements = "None" });
+               .HasData(new RSVP() { Id = 2, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341231"), Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = "Coming", DietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-               .HasData(new RSVP() { Id = 3, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = 2, Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = "Coming", DietaryRequirements = "None" });
+               .HasData(new RSVP() { Id = 3, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341232"), Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = "Coming", DietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-                .HasData(new RSVP() { Id = 4, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = 6, Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Avventer", DietaryRequirements = "None" });
+                .HasData(new RSVP() { Id = 4, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341236"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Avventer", DietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-                .HasData(new RSVP() { Id = 5, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = 3, Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Kommer", DietaryRequirements = "None" });
+                .HasData(new RSVP() { Id = 5, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341233"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Kommer", DietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-                .HasData(new RSVP() { Id = 6, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = 4, Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Kommer", DietaryRequirements = "None" });
+                .HasData(new RSVP() { Id = 6, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341234"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Kommer", DietaryRequirements = "None" });
 
             return modelBuilder;
         }

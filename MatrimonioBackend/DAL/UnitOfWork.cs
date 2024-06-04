@@ -7,7 +7,7 @@ namespace ContosoUniversity.DAL
     public class UnitOfWork : IDisposable
     {
         private WeddingContext context = new WeddingContext();
-        private GenericRepository<User> _userRepository;
+        private GenericRepository<MarryMonioUser> _userRepository;
         private GenericRepository<Wedding> _weddingRepository;
         private GenericRepository<Participant> _participantRepository;
         private GenericRepository<RSVP> _RSVPRepository;
@@ -16,14 +16,14 @@ namespace ContosoUniversity.DAL
         private GenericRepository<ReligiousCeremony> _religiousCeremonyRepository;
         private GenericRepository<Location> _locationRepository;
 
-        public GenericRepository<User> UserRepository
+        public GenericRepository<MarryMonioUser> UserRepository
         {
             get
             {
 
                 if (this._userRepository == null)
                 {
-                    this._userRepository = new GenericRepository<User>(context);
+                    this._userRepository = new GenericRepository<MarryMonioUser>(context);
                 }
                 return _userRepository;
             }

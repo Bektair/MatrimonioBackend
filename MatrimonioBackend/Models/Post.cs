@@ -15,8 +15,8 @@ namespace MatrimonioBackend.Models
         public string Body { get; set; }
 
         //Nav properties
-        public User Author { get; set; }
-        public int AuthorId { get; set; }
+        public MarryMonioUser Author { get; set; }
+        public Guid AuthorId { get; set; }
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
 

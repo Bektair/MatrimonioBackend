@@ -8,8 +8,8 @@ namespace MatrimonioBackend.Profiles
     {
 
         public UserProfile() {
-            CreateMap<UserCreateDTO, User>();
-            CreateMap<User, UserGetDTO>();
+            CreateMap<UserCreateDTO, MarryMonioUser>();
+            CreateMap<MarryMonioUser, UserGetDTO>();
 
 
         }
