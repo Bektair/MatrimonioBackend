@@ -29,12 +29,15 @@ namespace MatrimonioBackend.Controllers
             return _mapper.Map<ReceptionReadDTO>(Reception);
         }
 
+ 
+
         [HttpGet("")]
         [EnableQuery]
         public ActionResult<IEnumerable<ReceptionReadDTO>> GetReceptions(){
+            var Receptions = _unitOfWork.ReceptionRepository.Get(null, null, "MenuOptions"); //Location
 
-            var Receptions = _unitOfWork.ReceptionRepository.Get(null, null, "Location");
-            return _mapper.Map<List<ReceptionReadDTO>>(Receptions);
+            var receptionReadDTOs =  _mapper.Map<List<ReceptionReadDTO>>(Receptions.ToList());
+            return receptionReadDTOs;
         }
 
         [HttpPost]

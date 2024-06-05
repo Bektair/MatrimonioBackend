@@ -1,4 +1,5 @@
 ﻿using MatrimonioBackend.DTOs.Location;
+using MatrimonioBackend.Models;
 
 namespace MatrimonioBackend.DTOs.Reception
 {
@@ -11,5 +12,8 @@ namespace MatrimonioBackend.DTOs.Reception
         //Nav properties
         public LocationReadDTO Location{ get; set; }
         public int? WeddingId { get; set; }
+
+        public ICollection<MenuOptionReadDTO> MenuOptions { get; set; } = new List<MenuOptionReadDTO>();
+
     }
 }

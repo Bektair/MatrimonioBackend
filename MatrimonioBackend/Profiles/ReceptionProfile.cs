@@ -8,7 +8,7 @@ namespace MatrimonioBackend.Profiles
     {
         public ReceptionProfile()
         {
-            CreateMap<Reception, ReceptionReadDTO>();
+            CreateMap<Reception, ReceptionReadDTO>().ForMember(dest => dest.MenuOptions, opt => opt.MapFrom<CustomReceptionResolverRead>());
             CreateMap<ReceptionCreateDTO, Reception>();
         }
 
