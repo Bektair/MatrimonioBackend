@@ -7,7 +7,7 @@ namespace MatrimonioBackend.Profiles
 {
 
 
-    public class CustomRSVPResolver : IValueResolver<RSVPCreateDTO, RSVP, DateTime>
+    public class CustomRSVPResolverCreate : IValueResolver<RSVPCreateDTO, RSVP, DateTime>
     {
         public DateTime Resolve(RSVPCreateDTO source, RSVP destination, DateTime destMember, ResolutionContext context)
         {

@@ -81,8 +81,8 @@ namespace MatrimonioBackend.Controllers
         /// <param name="RSVP_id"></param>
         /// <param name="patch"></param>
         /// <returns></returns>
-        [HttpPatch("/{RSVP_id}")]
-        public ActionResult UpdateRSVP(int RSVP_id, [FromBody] JsonPatchDocument<RSVP> patch)
+        [HttpPatch("/api/[controller]/{RSVP_id}")]
+        public ActionResult UpdateRSVP(int RSVP_id, [FromBody] JsonPatchDocument<RSVPUpdateDTO> patch)
         {
             var RSVP = unitOfWork.RSVPRepository.GetByID(RSVP_id);
 
@@ -92,7 +92,9 @@ namespace MatrimonioBackend.Controllers
             }
 
             var Original = RSVP.DeepCopy<RSVP>();
-            patch.ApplyTo(RSVP, ModelState);
+            var rsvpPatch = _mapper.Map<JsonPatchDocument<RSVP>>(patch);
+
+            rsvpPatch.ApplyTo(RSVP, ModelState);
 
             if (!ModelState.IsValid)
             {

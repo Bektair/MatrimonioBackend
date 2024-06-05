@@ -33,7 +33,7 @@ namespace MatrimonioBackend.Controllers
 
         // GET: UserController
         [HttpGet("{user_id}")]
-        public ActionResult<UserGetDTO> GetUser(int user_id)
+        public ActionResult<UserGetDTO> GetUser(Guid user_id)
         {
 
             var user = UnitOfWork.UserRepository.GetByID(user_id);

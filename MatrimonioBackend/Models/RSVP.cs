@@ -14,9 +14,15 @@ namespace MatrimonioBackend.Models
 
         public string Status { get; set; }
         public int NumberOfGuests { get; set; }
-        public string DietaryRequirements { get; set; }
+        public string OtherDietaryRequirements { get; set; }
 
         //Nav
+        public MenuOption? ChoosenDinner { get; set; }
+        public int? ChoosenDinnerId { get; set; }
+
+        public MenuOption? ChoosenDessert { get; set; }
+        public int? ChoosenDessertId { get; set; }
+
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
 

@@ -1,10 +1,9 @@
-﻿using MatrimonioBackend.DTOs.User;
+﻿using MatrimonioBackend.Models;
 
 namespace MatrimonioBackend.DTOs.RSVP
 {
-    public class RSVPReadDTO
+    public class RSVPUpdateDTO
     {
-        public int Id { get; set; }
         public string Body { get; set; }
         public DateTime Deadline { get; set; }
 
@@ -12,7 +11,12 @@ namespace MatrimonioBackend.DTOs.RSVP
         public int NumberOfGuests { get; set; }
         public string OtherDietaryRequirements { get; set; }
 
-        public UserGetDTO Signer { get; set; }
+        public int? ChoosenDinnerId { get; set; }
+
+        public int? ChoosenDessertId { get; set; }
+
+        public Guid SignerId { get; set; }
+
 
     }
 }

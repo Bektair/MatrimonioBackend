@@ -11,7 +11,7 @@ namespace MatrimonioBackend.DTOs.RSVP
 
         public string Status { get; set; }
         public int NumberOfGuests { get; set; }
-        public string DietaryRequirements { get; set; }
+        public string OtherDietaryRequirements { get; set; }
         public Guid SignerId { get; set; }
         public int WeddingId { get; set; }
 

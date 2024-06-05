@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace MatrimonioBackend.Profiles
 {
@@ -10,8 +11,9 @@ namespace MatrimonioBackend.Profiles
         public RSVPProfile()
         {
          
-            CreateMap<RSVPCreateDTO, RSVP>().ForMember(dest => dest.Deadline, opt => opt.MapFrom<CustomRSVPResolver>());
-
+            CreateMap<RSVPCreateDTO, RSVP>().ForMember(dest => dest.Deadline, opt => opt.MapFrom<CustomRSVPResolverCreate>());
+            CreateMap<RSVPUpdateDTO, RSVP>();
+            CreateMap<JsonPatchDocument<RSVPUpdateDTO>, JsonPatchDocument<RSVP>>();
             CreateMap<RSVP, RSVPReadDTO>();
 
         }

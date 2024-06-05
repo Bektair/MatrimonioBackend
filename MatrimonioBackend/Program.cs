@@ -1,4 +1,5 @@
 using dotenv.net;
+using JsonPatchSample;
 using MatrimonioBackend.Models;
 using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,7 +32,7 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
 
 var AUTH0_DOMAIN = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options => { options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter()); })
     .AddOData(options => options
         .Select()
         .Filter()
