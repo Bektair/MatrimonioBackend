@@ -1,4 +1,5 @@
-﻿using MatrimonioBackend.Models;
+﻿using MatrimonioBackend.DTOs.Reception;
+using MatrimonioBackend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

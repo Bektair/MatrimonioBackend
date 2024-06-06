@@ -1,7 +1,9 @@
-﻿using MatrimonioBackend.Models;
+﻿using MatrimonioBackend.DTOs.Reception;
+using MatrimonioBackend.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using static System.Net.WebRequestMethods;
 
 namespace MatrimonioBackend.DAL
 {
@@ -89,6 +91,7 @@ namespace MatrimonioBackend.DAL
 
             modelBuilder.Entity<MarryMonioUser>().Property(user => user.Email_Verified).HasDefaultValue(false);
 
+   
 
             modelBuilder.Entity<Post>()
                 .HasMany(e => e.images)
@@ -108,7 +111,7 @@ namespace MatrimonioBackend.DAL
         {
 
             modelBuilder.Entity<MarryMonioUser>()
-                .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341231"), Password= "$2b$10$5Lg7sMrtqv6Wrwmg5RczxezpgXmb5CCXn1q4bqBO1YwLar6kuC/6S", FirstName = "Johnny", LastName="Depp", Nickname="Sparrow", Email_Verified = true, Email = "1231@gmail.com" });
+                .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341231"), Password= "$2b$10$5Lg7sMrtqv6Wrwmg5RczxezpgXmb5CCXn1q4bqBO1YwLar6kuC/6S", FirstName = "Johnny", LastName="Depp", Nickname="Sparrow", Email_Verified = true, Email = "1231@gmail.com", ProfilePicture= "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717589458/monkey-face_kbdlvh.svg" });
             modelBuilder.Entity<MarryMonioUser>()
                 .HasData(new MarryMonioUser { Id = new Guid("12345678-1234-1234-1234-123412341232"), Password = "$2b$10$Gadpk8GCgZE.dyzZFMHATOB0FT37Lt4DvBo4cO5PZ.0esE/7CrEK2", FirstName = "Amber", LastName="Heard", Nickname= "Amear", Email_Verified = true, Email = "1232@gmail.com" });
 
@@ -162,13 +165,28 @@ namespace MatrimonioBackend.DAL
                     LocationId = 4, WeddingId = 2 });
 
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 1, DishName = "Russian Kaviar", Alergens = "None", ReceptionId = 1, Tags = "Fish", Image = "fi fi-sr-home" });
+                .HasData(new MenuOption { Id = 1, DishName = "Russian Kaviar", Alergens = Allergen.Fish, ReceptionId = 1, Tags = DishTags.Dinner+","+DishTags.Fish, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/caviar-1-svgrepo-com_kybu3j.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 2, DishName = "Sweltzer Salad", Alergens = "Peanuts", ReceptionId = 1, Tags = "Vegan", Image = "fi fi-sr-home" });
+                .HasData(new MenuOption { Id = 2, DishName = "Sweltzer Salad", Alergens = Allergen.Lupin, ReceptionId = 1, Tags = DishTags.Dinner+","+DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/salad-svgrepo-com_youfu3.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 3, DishName = "Ceasar Salad", Alergens = "Gluten", ReceptionId = 2, Tags = "Vegan", Image = "fi fi-sr-home" });
+                .HasData(new MenuOption { Id = 3, DishName = "Ceasar Salad", Alergens = Allergen.Pistachio, ReceptionId = 2, Tags = DishTags.Dinner+","+DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/salad-svgrepo-com_youfu3.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 4, DishName = "Tartare", Alergens = "", ReceptionId = 2, Tags = "Meat", Image = "fi fi-sr-home" });
+                .HasData(new MenuOption { Id = 4, DishName = "Tartare", Alergens = Allergen.None, ReceptionId = 2, Tags = DishTags.Dinner+","+DishTags.Meat, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/beef-svgrepo-com_seskgw.svg" });
+            
+            modelBuilder.Entity<MenuOption>()
+                .HasData(new MenuOption { Id = 5, DishName = "Pizza", Alergens = Allergen.Lupin+","+Allergen.Wheat, ReceptionId = 1, Tags = DishTags.Dinner+","+DishTags.Meat, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669314/fi-rr-pizza-slice_shtxjk.svg" });
+            modelBuilder.Entity<MenuOption>()
+                .HasData(new MenuOption { Id = 6, DishName = "Croissant", Alergens = Allergen.Wheat, ReceptionId = 1, Tags = DishTags.Dessert+","+DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
+            modelBuilder.Entity<MenuOption>()
+                .HasData(new MenuOption { Id = 7, DishName = "OreoCake", Alergens = Allergen.Wheat+","+Allergen.Milk, ReceptionId = 1, Tags = DishTags.Dessert+","+DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cake-birthday_ilnva6.svg" });
+            modelBuilder.Entity<MenuOption>()
+                .HasData(new MenuOption { Id = 8, DishName = "IceCream", Alergens = Allergen.Milk, ReceptionId = 1, Tags = DishTags.Dessert+","+DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/fi-rr-ice-cream_xnkmus.svg" });
+            modelBuilder.Entity<MenuOption>()
+                .HasData(new MenuOption { Id = 9, DishName = "Cocktail", Alergens = Allergen.None, ReceptionId = 1, Tags = DishTags.Dessert, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cocktail_ydvrfc.svg" });
+            modelBuilder.Entity<MenuOption>()
+                .HasData(new MenuOption { Id = 10, DishName = "Croissant", Alergens = Allergen.Wheat, ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
+
+
 
             modelBuilder.Entity<ReligiousCeremony>()
                 .HasData(new ReligiousCeremony { Id = 1, LocationId = 1, WeddingId = 1, Date = DateTime.UtcNow.AddMinutes(1), Description = "LAS VEGAS Baby, come and meet ous for the church!" });

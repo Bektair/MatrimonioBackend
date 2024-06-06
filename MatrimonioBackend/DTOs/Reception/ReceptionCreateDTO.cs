@@ -11,7 +11,7 @@ namespace MatrimonioBackend.DTOs.Reception
         public int LocationId { get; set; }
         public int WeddingId { get; set; }
 
-        public ICollection<MenuOption> MenuOptions { get; set; } = new List<MenuOption>();
+        public ICollection<MenuOptionReadDTO> MenuOptions { get; set; } = new List<MenuOptionReadDTO>();
 
 
     }
