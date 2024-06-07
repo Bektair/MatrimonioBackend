@@ -34,14 +34,9 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
 
 var AUTH0_DOMAIN = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
-builder.Services
-        .AddLogging()
-        .AddMvc()
-        .AddNewtonsoftJson();
 
-builder.Services.AddControllers(options => { options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter()); })
-
-
+builder.Services.AddControllers()
+    .AddNewtonsoftJson()
     .AddOData(options => options
         .Select()
         .Filter()
