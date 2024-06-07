@@ -182,9 +182,9 @@ namespace MatrimonioBackend.DAL
             modelBuilder.Entity<MenuOption>()
                 .HasData(new MenuOption { Id = 8, DishName = "IceCream", Alergens = Allergen.Milk, ReceptionId = 1, Tags = DishTags.Dessert+","+DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/fi-rr-ice-cream_xnkmus.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 9, DishName = "Cocktail", Alergens = Allergen.None, ReceptionId = 1, Tags = DishTags.Dessert, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cocktail_ydvrfc.svg" });
+                .HasData(new MenuOption { Id = 9, DishName = "Cocktail", Alergens = Allergen.None, ReceptionId = 2, Tags = DishTags.Dessert, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cocktail_ydvrfc.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 10, DishName = "Croissant", Alergens = Allergen.Wheat, ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
+                .HasData(new MenuOption { Id = 10, DishName = "Croissant", Alergens = Allergen.Wheat, ReceptionId = 2, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
 
 
 

@@ -29,8 +29,6 @@ namespace MatrimonioBackend.Controllers
             return _mapper.Map<ReceptionReadDTO>(Reception);
         }
 
- 
-
         [HttpGet("")]
         [EnableQuery]
         public ActionResult<IEnumerable<ReceptionReadDTO>> GetReceptions(){
