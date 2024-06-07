@@ -4,7 +4,9 @@ using MatrimonioBackend.Models;
 using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
@@ -32,7 +34,14 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
 
 var AUTH0_DOMAIN = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
+builder.Services
+        .AddLogging()
+        .AddMvc()
+        .AddNewtonsoftJson();
+
 builder.Services.AddControllers(options => { options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter()); })
+
+
     .AddOData(options => options
         .Select()
         .Filter()
