@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 
-namespace MatrimonioBackend.Models
+namespace MatrimonioBackend.DTOs.RSVP
 {
-    public static class RSVPExtension
+    public static class RSVPReadDTOExtension
     {
         public static T DeepCopy<T>(this T self)
         {

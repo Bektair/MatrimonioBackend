@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Post;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -12,6 +13,7 @@ using System.Linq.Expressions;
 namespace MatrimonioBackend.Controllers
 {
     [Route("api/[controller]/")]
+    [Authorize]
     [ApiController]
     public class PostController : ODataController
     {
@@ -33,7 +35,6 @@ namespace MatrimonioBackend.Controllers
 
         [HttpGet("")]
         [EnableQuery]
-        [Authorize]
         public ActionResult<IEnumerable<Post>> Get()
         {
 //            Expression<Func<TEntity, bool>> filter = null, //We send in a lambda expression based on entity ex. student => student.LastName == "Smith"

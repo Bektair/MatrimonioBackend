@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.ReligiousCeremony;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

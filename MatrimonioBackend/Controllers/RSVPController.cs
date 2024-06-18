@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
-using static MatrimonioBackend.Models.RSVPExtension;
 
 namespace MatrimonioBackend.Controllers
 {
@@ -84,14 +83,16 @@ namespace MatrimonioBackend.Controllers
         [HttpPatch("/api/[controller]/{RSVP_id}")]
         public ActionResult UpdateRSVP(int RSVP_id, [FromBody] JsonPatchDocument<RSVPUpdateDTO> patch)
         {
-            var RSVP = unitOfWork.RSVPRepository.GetByID(RSVP_id);
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => RSVP_id == rsvp.Id, null, "Signer");
 
-            if (RSVP == null)
+            if (RSVPs.Count() == 0)
             {
                 return NotFound();
             }
+            var RSVP = RSVPs.First();
+            var RSVPReadOriginal = _mapper.Map<RSVP, RSVPReadDTO>(RSVP);
+            var Original = RSVPReadOriginal.DeepCopy<RSVPReadDTO>();
 
-            var Original = RSVP.DeepCopy<RSVP>();
             var rsvpPatch = _mapper.Map<JsonPatchDocument<RSVP>>(patch);
 
             rsvpPatch.ApplyTo(RSVP, ModelState);
@@ -103,7 +104,7 @@ namespace MatrimonioBackend.Controllers
 
             unitOfWork.Save();
 
-            return Ok(new { original= _mapper.Map<RSVP, RSVPReadDTO>(Original), patched = _mapper.Map<RSVP, RSVPReadDTO>(RSVP) });
+            return Ok(new { original= Original, patched = _mapper.Map<RSVP, RSVPReadDTO>(RSVP) });
         }
 
         [HttpDelete("/{RSVP_id}")]

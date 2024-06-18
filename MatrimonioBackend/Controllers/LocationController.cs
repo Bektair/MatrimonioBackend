@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Location;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;

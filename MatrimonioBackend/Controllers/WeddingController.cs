@@ -5,6 +5,7 @@ using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Participant;
 using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ namespace MatrimonioBackend.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
+    [Authorize]
     public class WeddingController : ControllerBase
     {
         UnitOfWork unitOfWork = new UnitOfWork();

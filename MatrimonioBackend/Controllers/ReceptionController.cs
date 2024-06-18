@@ -2,6 +2,7 @@
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Post;
 using MatrimonioBackend.DTOs.Reception;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
