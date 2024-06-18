@@ -25,9 +25,14 @@ static IEdmModel GetEdmModel()
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
+var environment = builder.Environment;
+
+
+
 builder.Host.ConfigureAppConfiguration((configBuilder) =>
 {
     configBuilder.Sources.Clear();
+
     DotEnv.Load();
     configBuilder.AddEnvironmentVariables();
 });
@@ -53,6 +58,8 @@ builder.Services.AddTransient<IStudentservice, StudentService>();
 
 //builder.Services.AddDbContext<WeddingContext>(opt => opt.UseSqlServer(connectionString));
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -106,8 +113,13 @@ app.UseCors("MyPolicy");
 //app.UseAuthentication();
 app.UseAuthorization();
 
-
-
-app.MapControllers();
+if (app.Environment.IsDevelopment())
+{ 
+   app.MapControllers().AllowAnonymous();
+}
+else
+{
+    app.MapControllers();
+}
 
 app.Run();

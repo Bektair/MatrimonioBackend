@@ -1,4 +1,4 @@
-﻿namespace MatrimonioBackend.DTOs.Reception
+﻿namespace MatrimonioBackend.Models.Constants
 {
     //https://www.mkgfoods.co.uk/allergen-info/
     public static class Allergen

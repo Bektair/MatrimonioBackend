@@ -59,9 +59,7 @@ namespace MatrimonioBackend.DAL
 
         public virtual void Insert(TEntity entity)
         {
-           //dbSet.Add(entity);
            context.Add(entity);
-
         }
 
         public virtual bool Delete(object id)

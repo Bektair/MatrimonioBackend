@@ -1,4 +1,4 @@
-﻿namespace MatrimonioBackend.DTOs.Reception
+﻿namespace MatrimonioBackend.Models.Constants
 {
     public class DishTags
     {

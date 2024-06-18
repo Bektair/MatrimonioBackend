@@ -1,5 +1,5 @@
-﻿using MatrimonioBackend.DTOs.Reception;
-using MatrimonioBackend.Models;
+﻿using MatrimonioBackend.Models;
+using MatrimonioBackend.Models.Constants;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
@@ -22,7 +22,8 @@ namespace MatrimonioBackend.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATA_SOURCE"));
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("DATA_SOURCE"))
+                .LogTo(Console.WriteLine, LogLevel.Information);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -209,17 +210,17 @@ namespace MatrimonioBackend.DAL
                 .HasData(new PostImage() { Id = 4, PostId = 2, URI = "https://upload.wikimedia.org/wikipedia/commons/9/9d/Red_Christmas_present_on_white_background.jpg", Role = "MainImage", Size = "155kb" });
 
             modelBuilder.Entity<RSVP> ()
-                .HasData(new RSVP() { Id = 1, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341235"), Deadline=DateTime.UtcNow.AddDays(14), NumberOfGuests=1, Status="Pending", OtherDietaryRequirements="None"});
+                .HasData(new RSVP() { Id = 1, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341235"), Deadline=DateTime.UtcNow.AddDays(14), NumberOfGuests=1, Status= RSVPStatus.Accepted, OtherDietaryRequirements="None"});
             modelBuilder.Entity<RSVP>()
-               .HasData(new RSVP() { Id = 2, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341231"), Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = "Coming", OtherDietaryRequirements = "None" });
+               .HasData(new RSVP() { Id = 2, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341231"), Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = RSVPStatus.Accepted, OtherDietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-               .HasData(new RSVP() { Id = 3, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341232"), Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = "Coming", OtherDietaryRequirements = "None" });
+               .HasData(new RSVP() { Id = 3, WeddingId = 1, Body = "Come to my wedding, there will be free alcohol", SignerId = new Guid("12345678-1234-1234-1234-123412341232"), Deadline = DateTime.UtcNow.AddDays(14), NumberOfGuests = 1, Status = RSVPStatus.Accepted, OtherDietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-                .HasData(new RSVP() { Id = 4, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341236"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Avventer", OtherDietaryRequirements = "None" });
+                .HasData(new RSVP() { Id = 4, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341236"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = RSVPStatus.Pending, OtherDietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-                .HasData(new RSVP() { Id = 5, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341233"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Kommer", OtherDietaryRequirements = "None" });
+                .HasData(new RSVP() { Id = 5, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341233"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = RSVPStatus.Accepted, OtherDietaryRequirements = "None" });
             modelBuilder.Entity<RSVP>()
-                .HasData(new RSVP() { Id = 6, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341234"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = "Kommer", OtherDietaryRequirements = "None" });
+                .HasData(new RSVP() { Id = 6, WeddingId = 2, Body = "Kom til det fantastiske brylluppet mitt", SignerId = new Guid("12345678-1234-1234-1234-123412341234"), Deadline = DateTime.UtcNow.AddMonths(8), NumberOfGuests = 1, Status = RSVPStatus.Accepted, OtherDietaryRequirements = "None" });
 
             return modelBuilder;
         }

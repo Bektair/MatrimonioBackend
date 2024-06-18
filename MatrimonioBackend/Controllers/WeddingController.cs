@@ -20,7 +20,6 @@ namespace MatrimonioBackend.Controllers
 
         public WeddingController(IMapper mapper) {
             _mapper = mapper;
-
         }
 
         [HttpGet("")]
