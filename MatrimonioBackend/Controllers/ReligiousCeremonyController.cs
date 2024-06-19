@@ -3,6 +3,7 @@ using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -11,6 +12,8 @@ namespace MatrimonioBackend.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
+    [Authorize]
+
     public class ReligiousCeremonyController : ControllerBase
     {
         IMapper _mapper;

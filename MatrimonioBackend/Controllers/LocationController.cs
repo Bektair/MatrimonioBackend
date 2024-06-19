@@ -3,6 +3,7 @@ using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace MatrimonioBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LocationController : ControllerBase
     {
         IMapper _mapper;
