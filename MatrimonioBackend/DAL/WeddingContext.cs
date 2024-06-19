@@ -129,9 +129,11 @@ namespace MatrimonioBackend.DAL
 
 
             modelBuilder.Entity<Wedding>()
-                .HasData(new Models.Wedding { Id = 1, Description = "We will be together for all time!", Dresscode = "FineClothing"});
+                .HasData(new Models.Wedding { id = 1, description = "We will be together for all time!", dresscode = "FineClothing",
+                    backgroundImage = "", bodyFont = "", headingFont="", primaryColor = "", secoundaryColor="", primaryFontColor="", secoundaryFontColor=""});
             modelBuilder.Entity<Wedding>()
-                .HasData(new Wedding { Id = 2, Description = "Samler hele familien for ett flott bryllup, vi skal være sammen for alltid", Dresscode = "Bunad" });
+                .HasData(new Wedding { id = 2, description = "Samler hele familien for ett flott bryllup, vi skal være sammen for alltid", dresscode = "Bunad", 
+                    backgroundImage = "", bodyFont = "", headingFont="", primaryColor = "", secoundaryColor="", primaryFontColor="", secoundaryFontColor=""});
 
             modelBuilder.Entity<Participant>()
                 .HasData(new Participant() { UserId = new Guid("12345678-1234-1234-1234-123412341231"), WeddingId = 1, Role = "Husband" });

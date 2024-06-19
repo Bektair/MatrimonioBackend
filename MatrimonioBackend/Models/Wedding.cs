@@ -10,19 +10,16 @@ namespace MatrimonioBackend.Models
 {
     public class Wedding
     {
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public string Dresscode { get; set; }
-
-        public string MainColor { get; set; }
-        public string SecoundaryColor { get; set; }
-        public string MainFontColor { get; set; }
-        public string SecoundaryFontColor { get; set; }
-
-        public string BackgroundImage   { get; set; }
-
-        public string BodyFont { get; set; }
-        public string HeadingFont { get; set; }
+        public int id { get; set; }
+        public string description { get; set; }
+        public string dresscode { get; set; }
+        public string primaryColor { get; set; }
+        public string secoundaryColor { get; set; }
+        public string primaryFontColor { get; set; }
+        public string secoundaryFontColor { get; set; }
+        public string backgroundImage   { get; set; }
+        public string bodyFont { get; set; }
+        public string headingFont { get; set; }
 
 
         //NavProperties

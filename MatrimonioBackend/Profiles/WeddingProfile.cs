@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace MatrimonioBackend.Profiles
 {
@@ -9,7 +11,9 @@ namespace MatrimonioBackend.Profiles
         public WeddingProfile() { 
             CreateMap<WeddingCreateDTO, Wedding>();
             CreateMap<WeddingUpdateDTO, Wedding>();
-            CreateMap<Wedding, WeddingGetDTO>();
+            CreateMap<Wedding, WeddingReadDTO>();
+            CreateMap<JsonPatchDocument<WeddingUpdateDTO>, JsonPatchDocument<Wedding>>().ConvertUsing(new CustomWeddingResolverUpdate());
+
         }
 
     }

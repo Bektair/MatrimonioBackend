@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace MatrimonioBackend.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {

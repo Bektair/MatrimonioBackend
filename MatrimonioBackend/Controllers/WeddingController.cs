@@ -3,9 +3,11 @@
 using AutoMapper;
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Participant;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.IdentityModel.Tokens;
@@ -26,33 +28,33 @@ namespace MatrimonioBackend.Controllers
 
         [HttpGet("")]
         [EnableQuery]
-        public ActionResult<IEnumerable<WeddingGetDTO>> GetWeddings()
+        public ActionResult<IEnumerable<WeddingReadDTO>> GetWeddings()
         {
             var weddings = unitOfWork.WeddingRepository.Get();
-            var weddingDTOs = _mapper.Map<List<WeddingGetDTO>>(weddings);
+            var weddingDTOs = _mapper.Map<List<WeddingReadDTO>>(weddings);
 
             return Ok(weddingDTOs);
         }
 
 
         [HttpGet("{wedding_id}")]
-        public ActionResult<IEnumerable<WeddingGetDTO>> GetWeddingById(int wedding_id)
+        public ActionResult<IEnumerable<WeddingReadDTO>> GetWeddingById(int wedding_id)
         {
             var wedding = unitOfWork.WeddingRepository.GetByID(wedding_id);
-            var weddingDTO = _mapper.Map<WeddingGetDTO>(wedding);
+            var weddingDTO = _mapper.Map<WeddingReadDTO>(wedding);
 
             return Ok(weddingDTO);
         }
 
         [HttpPost("")]
-        public ActionResult<WeddingGetDTO> CreateWedding(WeddingCreateDTO createWeddingDTO)
+        public ActionResult<WeddingReadDTO> CreateWedding(WeddingCreateDTO createWeddingDTO)
         {
             //I need automapper :)
             var wedding = _mapper.Map<WeddingCreateDTO, Wedding>(createWeddingDTO);
             unitOfWork.WeddingRepository.Insert(wedding);
             unitOfWork.Save();
 
-            return CreatedAtAction("GetWeddingById", new { wedding_id = wedding.Id }, _mapper.Map<WeddingGetDTO>(wedding));
+            return CreatedAtAction("GetWeddingById", new { wedding_id = wedding.id }, _mapper.Map<WeddingReadDTO>(wedding));
         }
 
         [HttpPut("")]
@@ -65,6 +67,33 @@ namespace MatrimonioBackend.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{Wedding_id}")]
+        public ActionResult UpdateRSVP(int Wedding_id, [FromBody] JsonPatchDocument<WeddingUpdateDTO> patch)
+        {
+            var Weddings = unitOfWork.WeddingRepository.Get((wedding) => Wedding_id == wedding.id);
+
+            if (Weddings.Count() == 0)
+            {
+                return NotFound();
+            }
+            var Wedding = Weddings.First();
+            var WeddingReadOriginal = _mapper.Map<Wedding, WeddingReadDTO>(Wedding);
+            var Original = WeddingReadOriginal.DeepCopy<WeddingReadDTO>();
+
+            var weddingPatch = _mapper.Map<JsonPatchDocument<Wedding>>(patch);
+
+            weddingPatch.ApplyTo(Wedding, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            unitOfWork.Save();
+
+            return Ok(new { original = Original, patched = _mapper.Map<Wedding, WeddingReadDTO>(Wedding) });
+        }
+
         [HttpDelete("")]
         public ActionResult DeleteWedding(int id)
         {
@@ -72,6 +101,8 @@ namespace MatrimonioBackend.Controllers
             unitOfWork.Save();
             return NoContent();
         }
+
+
 
         [HttpPost("participant")]
         public ActionResult CreateParticipant(Guid user_id, int wedding_id, string role)
