@@ -15,6 +15,8 @@
 
         public string bodyFont { get; set; }
         public string headingFont { get; set; }
+        public string title { get; set; }
+        public string picture { get; set; }
 
     }
 }

@@ -11,6 +11,8 @@ namespace MatrimonioBackend.Models
     public class Wedding
     {
         public int id { get; set; }
+        public string title { get; set; }
+        public string picture { get; set; }
         public string description { get; set; }
         public string dresscode { get; set; }
         public string primaryColor { get; set; }
@@ -20,6 +22,7 @@ namespace MatrimonioBackend.Models
         public string backgroundImage   { get; set; }
         public string bodyFont { get; set; }
         public string headingFont { get; set; }
+
 
 
         //NavProperties

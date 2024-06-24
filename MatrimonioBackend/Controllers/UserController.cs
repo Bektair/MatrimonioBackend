@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.User;
+using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,9 +26,13 @@ namespace MatrimonioBackend.Controllers
         // GET: UserController
         [HttpGet("")]
         [Authorize("read:users")]
-        public ActionResult<IEnumerable<MarryMonioUser>> GetUsers () 
+        public ActionResult<IEnumerable<UserGetDTO>> GetUsers () 
         {
-            return Ok(UnitOfWork.UserRepository.Get());
+            var users = UnitOfWork.UserRepository.Get();
+            var map = _mapper.Map<List<UserGetDTO>>(users);
+
+            return Ok(map);
+
         }
 
 

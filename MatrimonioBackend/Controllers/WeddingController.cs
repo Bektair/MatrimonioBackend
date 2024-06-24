@@ -36,6 +36,20 @@ namespace MatrimonioBackend.Controllers
             return Ok(weddingDTOs);
         }
 
+        [HttpGet("participant/{participant_id}")]
+        public ActionResult<IEnumerable<WeddingReadDTO>> GetWeddingsByParticipant(Guid participant_id)
+        {
+
+            var participations = unitOfWork.ParticipantRepository.Get((participant)=> participant.UserId == participant_id, null, "Wedding");
+
+            var weddings = participations.Select((participant) => participant.Wedding);
+
+
+            var weddingDTOs = _mapper.Map<List<WeddingReadDTO>>(weddings);
+
+            return Ok(weddingDTOs);
+        }
+
 
         [HttpGet("{wedding_id}")]
         public ActionResult<IEnumerable<WeddingReadDTO>> GetWeddingById(int wedding_id)
