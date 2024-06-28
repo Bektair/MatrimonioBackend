@@ -8,8 +8,10 @@
         public const string Dairy = nameof(Dairy);
         public const string Chicken = nameof(Chicken);
         public const string Vegan = nameof(Vegan);
+        public const string Vegetarian = nameof(Vegetarian);
         public const string Dinner = nameof(Dinner);
         public const string Dessert = nameof(Dessert);
+
 
     }
 }

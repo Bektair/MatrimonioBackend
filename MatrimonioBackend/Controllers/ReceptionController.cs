@@ -30,6 +30,13 @@ namespace MatrimonioBackend.Controllers
         public ActionResult<ReceptionReadDTO> GetReceptionById(int reception_id)
         {
             var Reception = _unitOfWork.ReceptionRepository.GetByID(reception_id);
+
+            if(Reception == null)
+            {
+                return NotFound();
+            }
+
+
             return _mapper.Map<ReceptionReadDTO>(Reception);
         }
 
@@ -45,7 +52,6 @@ namespace MatrimonioBackend.Controllers
         [HttpPost]
         public ActionResult CreateReception(ReceptionCreateDTO createDTO)
         {
-
             var reception = _mapper.Map<Reception>(createDTO);
 
             _unitOfWork.ReceptionRepository.Insert(reception);
@@ -78,6 +84,39 @@ namespace MatrimonioBackend.Controllers
             _unitOfWork.ReceptionRepository.Delete(reception_id);
             _unitOfWork.Save();
 
+            return NoContent();
+        }
+
+        [HttpPost("AddMenuOption/{reception_id}")]
+        public ActionResult<MenuOptionReadDTO> AddMenuOption(int reception_id, MenuOptionCreateDTO menuOptionCreate)
+        {
+            var menuOption = _mapper.Map<MenuOption>(menuOptionCreate);
+            var reception = _unitOfWork.ReceptionRepository.GetByID(reception_id);
+
+            if (reception != null)
+                reception.MenuOptions.Add(menuOption);
+            else
+                return NotFound();
+            _unitOfWork.Save();
+
+            //Gives back a version of the reception with only the new menuItem
+            return Ok( _mapper.Map<MenuOptionReadDTO>(menuOption));
+        }
+
+        [HttpDelete("DeleteMenuOption/{reception_id}/{menuOptionId}")]
+        public ActionResult RemoveMenuOption(int reception_id, int menuOptionId)
+        {
+            var receptionById = _unitOfWork.ReceptionRepository.Get((x) => x.Id == reception_id, null, "MenuOptions");
+            
+            if(receptionById == null)
+                return NotFound();
+
+            var reception = receptionById.First();
+            var menuItem = reception.MenuOptions.First((x)=>x.Id == menuOptionId);
+
+            reception.MenuOptions.Remove(menuItem);
+
+            _unitOfWork.Save();
             return NoContent();
         }
     }

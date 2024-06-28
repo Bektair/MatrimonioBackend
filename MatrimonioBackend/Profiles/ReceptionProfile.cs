@@ -11,6 +11,8 @@ namespace MatrimonioBackend.Profiles
             CreateMap<Reception, ReceptionReadDTO>()
                 .ForMember(dest => dest.MenuOptions, opt => opt.MapFrom<CustomReceptionResolverRead>());
             CreateMap<ReceptionCreateDTO, Reception>();
+            CreateMap<MenuOptionCreateDTO, MenuOption>();
+            CreateMap<MenuOption, MenuOptionReadDTO>();
         }
 
     }

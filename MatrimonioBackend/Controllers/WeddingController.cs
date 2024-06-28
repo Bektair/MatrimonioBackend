@@ -126,11 +126,11 @@ namespace MatrimonioBackend.Controllers
             unitOfWork.ParticipantRepository.Insert(participant);
             unitOfWork.Save();
 
-            return NoContent();
+            return CreatedAtAction("GetParticipant", new { wedding_id = wedding_id, user_id = user_id  }, _mapper.Map<ParticipantReadDTO>(participant));
         }
 
         [HttpGet("participants/{wedding_id}")]
-        public ActionResult<IEnumerable<Participant>> GetParticipants(int wedding_id, string role="")
+        public ActionResult<IEnumerable<ParticipantReadDTO>> GetParticipants(int wedding_id, string role="")
         {
             IEnumerable<Participant> participants;
             if(role.IsNullOrEmpty())
@@ -138,15 +138,15 @@ namespace MatrimonioBackend.Controllers
             else
                 participants = unitOfWork.ParticipantRepository.Get((p) => p.WeddingId == wedding_id && p.Role.ToUpper() == role.ToUpper());
 
-            return Ok(participants);
+            return Ok(_mapper.Map<List<ParticipantReadDTO>>(participants));
         }
 
         [HttpGet("participants/{wedding_id}/{user_id}")]
-        public ActionResult<IEnumerable<Participant>> GetParticipant(int wedding_id, int user_id)
+        public ActionResult<IEnumerable<ParticipantReadDTO>> GetParticipant(int wedding_id, int user_id)
         {
             var participant = unitOfWork.ParticipantRepository.GetByIDComposite([wedding_id, user_id]);
 
-            return Ok(participant);
+            return Ok(_mapper.Map<ParticipantReadDTO>(participant));
         }
 
         [HttpPut("participants")]
