@@ -119,7 +119,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.MapControllers();
+    app.MapControllers().AllowAnonymous();
 }
 
 app.Run();

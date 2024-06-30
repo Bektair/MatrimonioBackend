@@ -52,7 +52,7 @@ namespace MatrimonioBackend.Controllers
             return CreatedAtAction("GetLocationById", new { Location_id = Location.Id }, _mapper.Map<LocationReadDTO>(Location));
         }
 
-        [HttpPatch] //Patch kan adde location
+        [HttpPatch("{Location_id}")] //Patch kan adde location
         public ActionResult PatchLocation(int Location_id, [FromBody] JsonPatchDocument<Location> patch)
         {
             var Location = _unitOfWork.LocationRepository.GetByID(Location_id);
