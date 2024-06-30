@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
@@ -33,9 +34,18 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
 {
     configBuilder.Sources.Clear();
 
-    DotEnv.Load();
+   if( builder.Environment.IsDevelopment()){
+        DotEnvOptions options = new DotEnvOptions(true,new List<string>() { ".env.development" });
+        DotEnv.Load(options);
+    } else
+    {
+        DotEnvOptions options = new DotEnvOptions(true, new List<string>() { ".env.prod" });
+        DotEnv.Load(options);
+    }
     configBuilder.AddEnvironmentVariables();
 });
+
+
 
 var AUTH0_DOMAIN = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
@@ -119,7 +129,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.MapControllers().AllowAnonymous();
+    app.MapControllers();
 }
 
 app.Run();
