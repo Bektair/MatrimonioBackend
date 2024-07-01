@@ -17,11 +17,7 @@ namespace MatrimonioBackend.Models
         public string OtherDietaryRequirements { get; set; }
 
         //Nav
-        public MenuOption? ChoosenDinner { get; set; }
-        public int? ChoosenDinnerId { get; set; }
-
-        public MenuOption? ChoosenDessert { get; set; }
-        public int? ChoosenDessertId { get; set; }
+        public IEnumerable<MenuOrder> MenuOrders { get; set; }
 
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }

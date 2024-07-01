@@ -14,10 +14,9 @@ namespace MatrimonioBackend.DTOs.RSVP
         public string OtherDietaryRequirements { get; set; }
 
         public UserGetDTO Signer { get; set; }
+        public IEnumerable<MenuOrder> MenuOrders { get; set; }
 
-        public int? ChoosenDinnerId { get; set; }
 
-        public int? ChoosenDessertId { get; set; }
 
     }
 }

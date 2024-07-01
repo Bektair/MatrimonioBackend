@@ -15,6 +15,7 @@ namespace ContosoUniversity.DAL
         private GenericRepository<Reception> _receptionRepository;
         private GenericRepository<ReligiousCeremony> _religiousCeremonyRepository;
         private GenericRepository<Location> _locationRepository;
+        private GenericRepository<MenuOrder> _menuOrderRepository;
 
         public GenericRepository<MarryMonioUser> UserRepository
         {
@@ -117,6 +118,19 @@ namespace ContosoUniversity.DAL
                     this._locationRepository = new GenericRepository<Location>(context);
                 }
                 return _locationRepository;
+            }
+        }
+
+        public GenericRepository<MenuOrder> MenuOrderRepository
+        {
+            get
+            {
+
+                if (this._menuOrderRepository== null)
+                {
+                    this._menuOrderRepository = new GenericRepository<MenuOrder>(context);
+                }
+                return _menuOrderRepository;
             }
         }
         public void Save()

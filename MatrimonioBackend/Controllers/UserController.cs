@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
+using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.DTOs.User;
 using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatrimonioBackend.Controllers
@@ -14,7 +16,7 @@ namespace MatrimonioBackend.Controllers
     public class UserController : ControllerBase
     {
 
-        public UnitOfWork UnitOfWork = new UnitOfWork();
+        public UnitOfWork unitOfWork = new UnitOfWork();
         public IMapper _mapper { get; set; }
 
         public UserController(IMapper mapper)
@@ -28,7 +30,7 @@ namespace MatrimonioBackend.Controllers
         [Authorize("read:users")]
         public ActionResult<IEnumerable<UserGetDTO>> GetUsers () 
         {
-            var users = UnitOfWork.UserRepository.Get();
+            var users = unitOfWork.UserRepository.Get();
             var map = _mapper.Map<List<UserGetDTO>>(users);
 
             return Ok(map);
@@ -41,7 +43,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult<UserGetDTO> GetUser(Guid user_id)
         {
 
-            var user = UnitOfWork.UserRepository.GetByID(user_id);
+            var user = unitOfWork.UserRepository.GetByID(user_id);
 
             return Ok(_mapper.Map<MarryMonioUser, UserGetDTO>(user));
         }
@@ -53,11 +55,37 @@ namespace MatrimonioBackend.Controllers
         {
 
             var user = _mapper.Map<UserCreateDTO, MarryMonioUser>(createUser);
-            UnitOfWork.UserRepository.Insert(user);
+            unitOfWork.UserRepository.Insert(user);
 
-            UnitOfWork.Save();
+            unitOfWork.Save();
 
             return CreatedAtAction("CreateUser", new { id = user.Id }, user);
+        }
+
+        [HttpPatch("{user_id}")]
+        public ActionResult UpdateUser(Guid user_id, [FromBody] JsonPatchDocument<UserUpdateDTO> patch) {
+            var Users = unitOfWork.UserRepository.Get((user) => user_id == user.Id);
+            var user = Users.FirstOrDefault();
+            if (Users.Count() == 0)
+            {
+                return NotFound();
+            }
+            var WeddingReadOriginal = _mapper.Map<MarryMonioUser, UserGetDTO>(user);
+            var Original = WeddingReadOriginal.DeepCopy<UserGetDTO>();
+
+            var userPatch = _mapper.Map<JsonPatchDocument<MarryMonioUser>>(patch);
+
+            userPatch.ApplyTo(user, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            unitOfWork.Save();
+
+            return Ok(new { original = Original, patched = _mapper.Map<MarryMonioUser, UserGetDTO>(user) });
+
+
+
         }
 
 

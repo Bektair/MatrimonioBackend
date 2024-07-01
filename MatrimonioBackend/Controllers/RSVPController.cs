@@ -29,9 +29,9 @@ namespace MatrimonioBackend.Controllers
 
         [EnableQuery]
         [HttpGet("")]
-        public ActionResult GetRSVPsByWedding()
+        public ActionResult GetRSVPs()
         {
-            var RSVPs = unitOfWork.RSVPRepository.Get(null, null, "Signer");
+            var RSVPs = unitOfWork.RSVPRepository.Get(null, null, "Signer,MenuOrders");
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 
@@ -42,7 +42,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult GetRSVPsByWedding(string wedding_id, string signer_id)
         {
 
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id) , null, "Signer");
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id) , null, "Signer,MenuOrders");
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 
@@ -53,7 +53,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult GetRSVPsByWedding(string wedding_id)
         {
 
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id, null, "Signer");
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id, null, "Signer,MenuOrders");
 
             var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
 
@@ -76,6 +76,7 @@ namespace MatrimonioBackend.Controllers
             var RSVP = unitOfWork.RSVPRepository.GetByID(RSVP_id);
             return Ok(_mapper.Map<RSVP, RSVPReadDTO>(RSVP));
         }
+
 
         /// <summary>
         /// Kan brukes til å blant annet svare RSVP
@@ -124,6 +125,31 @@ namespace MatrimonioBackend.Controllers
 
         }
 
+        [HttpGet("/MenuOrder/{Menuorder_id}")]
+        public ActionResult<MenuOrder> GetMenuOrder(int Menuorder_id)
+        {
+            var menuOrder = unitOfWork.MenuOrderRepository.Get((x) => x.Id == Menuorder_id).FirstOrDefault();
+            if (menuOrder == null)
+                return NotFound();
+
+            return Ok(menuOrder);
+
+        }
+
+        [HttpPost("/{RSVP_Id}/MenuOrder")]
+        public ActionResult<MenuOrder> AddMenuOder(int RSVP_Id, MenuOrderCreateDTO menuOrderCreateDTO)
+        {
+            var rsvp = unitOfWork.RSVPRepository.Get((x) => x.Id == RSVP_Id, null, "MenuOrders").FirstOrDefault();
+            if (rsvp == null)
+                return NotFound();
+
+            var menuOrder = _mapper.Map<MenuOrder>(menuOrderCreateDTO);
+            menuOrder.RSVPId = RSVP_Id;
+            unitOfWork.MenuOrderRepository.Insert(menuOrder);
+            unitOfWork.Save();
+
+            return Ok(menuOrder);
+        }
 
 
 

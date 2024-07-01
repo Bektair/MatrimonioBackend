@@ -130,26 +130,26 @@ namespace MatrimonioBackend.DAL
                 });
 
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 1, DishName = "Russian Kaviar", Alergens = Allergen.Fish, ReceptionId = 1, Tags = DishTags.Dinner + "," + DishTags.Fish, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/caviar-1-svgrepo-com_kybu3j.svg" });
+                .HasData(new MenuOption { Id = 1, DishType = "Russian Kaviar", ReceptionId = 1, Tags = DishTags.Dinner + "," + DishTags.Fish, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/caviar-1-svgrepo-com_kybu3j.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 2, DishName = "Sweltzer Salad", Alergens = Allergen.Lupin, ReceptionId = 1, Tags = DishTags.Dinner + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/salad-svgrepo-com_youfu3.svg" });
+                .HasData(new MenuOption { Id = 2, DishType = "Sweltzer Salad", ReceptionId = 1, Tags = DishTags.Dinner + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/salad-svgrepo-com_youfu3.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 3, DishName = "Ceasar Salad", Alergens = Allergen.Pistachio, ReceptionId = 2, Tags = DishTags.Dinner + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/salad-svgrepo-com_youfu3.svg" });
+                .HasData(new MenuOption { Id = 3, DishType = "Ceasar Salad", ReceptionId = 2, Tags = DishTags.Dinner + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/salad-svgrepo-com_youfu3.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 4, DishName = "Tartare", Alergens = Allergen.None, ReceptionId = 2, Tags = DishTags.Dinner + "," + DishTags.Meat, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/beef-svgrepo-com_seskgw.svg" });
+                .HasData(new MenuOption { Id = 4, DishType = "Tartare", ReceptionId = 2, Tags = DishTags.Dinner + "," + DishTags.Meat, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717588973/beef-svgrepo-com_seskgw.svg" });
 
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 5, DishName = "Pizza", Alergens = Allergen.Lupin + "," + Allergen.Wheat, ReceptionId = 1, Tags = DishTags.Dinner + "," + DishTags.Meat, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669314/fi-rr-pizza-slice_shtxjk.svg" });
+                .HasData(new MenuOption { Id = 5, DishType = "Pizza", ReceptionId = 1, Tags = DishTags.Dinner + "," + DishTags.Meat, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669314/fi-rr-pizza-slice_shtxjk.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 6, DishName = "Croissant", Alergens = Allergen.Wheat, ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
+                .HasData(new MenuOption { Id = 6, DishType = "Croissant", ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 7, DishName = "OreoCake", Alergens = Allergen.Wheat + "," + Allergen.Milk, ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cake-birthday_ilnva6.svg" });
+                .HasData(new MenuOption { Id = 7, DishType = "OreoCake", ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cake-birthday_ilnva6.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 8, DishName = "IceCream", Alergens = Allergen.Milk, ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/fi-rr-ice-cream_xnkmus.svg" });
+                .HasData(new MenuOption { Id = 8, DishType = "IceCream", ReceptionId = 1, Tags = DishTags.Dessert + "," + DishTags.Dairy, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/fi-rr-ice-cream_xnkmus.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 9, DishName = "Cocktail", Alergens = Allergen.None, ReceptionId = 2, Tags = DishTags.Dessert, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cocktail_ydvrfc.svg" });
+                .HasData(new MenuOption { Id = 9, DishType = "Cocktail", ReceptionId = 2, Tags = DishTags.Dessert, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-cocktail_ydvrfc.svg" });
             modelBuilder.Entity<MenuOption>()
-                .HasData(new MenuOption { Id = 10, DishName = "Croissant", Alergens = Allergen.Wheat, ReceptionId = 2, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
+                .HasData(new MenuOption { Id = 10, DishType = "Croissant", ReceptionId = 2, Tags = DishTags.Dessert + "," + DishTags.Vegan, Image = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1717669162/fi-rr-croissant_detk5k.svg" });
 
 
 

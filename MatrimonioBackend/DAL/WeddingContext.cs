@@ -17,6 +17,7 @@ namespace MatrimonioBackend.DAL
         public DbSet<MarryMonioUser> MarryMonioUser { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Participant> Participant { get; set; }
+        public DbSet<MenuOrder> MenuOrders { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
