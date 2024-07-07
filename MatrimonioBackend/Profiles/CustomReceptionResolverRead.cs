@@ -14,7 +14,7 @@ namespace MatrimonioBackend.Profiles
             {
                 var menuOption = new MenuOptionReadDTO()
                 {
-                    DishName = item.DishType,
+                    DishType = item.DishType,
                     Id = item.Id,
                     Image = item.Image,
                     Tags = item.Tags,

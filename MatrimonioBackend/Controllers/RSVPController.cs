@@ -136,7 +136,19 @@ namespace MatrimonioBackend.Controllers
 
         }
 
-        [HttpPost("/{RSVP_Id}/MenuOrder")]
+        [HttpGet("{RSVP_Id}/MenuOrders")]
+        public ActionResult<IEnumerable<MenuOrder>> GetMenuOrders(int RSVP_Id)
+        {
+            var rsvp = unitOfWork.RSVPRepository.Get((x) => x.Id == RSVP_Id, null, "MenuOrders").FirstOrDefault();
+            if (rsvp == null)
+                return NotFound();
+
+
+            return Ok(_mapper.Map< IEnumerable<MenuOrderReadDTO>>(rsvp.MenuOrders));
+
+        }
+
+        [HttpPost("/{RSVP_Id}/AddMenuOrder")]
         public ActionResult<MenuOrder> AddMenuOder(int RSVP_Id, MenuOrderCreateDTO menuOrderCreateDTO)
         {
             var rsvp = unitOfWork.RSVPRepository.Get((x) => x.Id == RSVP_Id, null, "MenuOrders").FirstOrDefault();
@@ -148,7 +160,7 @@ namespace MatrimonioBackend.Controllers
             unitOfWork.MenuOrderRepository.Insert(menuOrder);
             unitOfWork.Save();
 
-            return Ok(menuOrder);
+            return Ok(_mapper.Map<MenuOrderReadDTO>(menuOrder));
         }
 
 
