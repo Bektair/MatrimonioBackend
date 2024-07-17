@@ -4,7 +4,6 @@
     {
         public string Name { get; set; }
         public string Alergens { get; set; }
-        public bool IsAdult { get; set; }
         public int MenuOptionId { get; set; }
 
     }

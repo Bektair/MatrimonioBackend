@@ -148,7 +148,7 @@ namespace MatrimonioBackend.Controllers
 
         }
 
-        [HttpPost("/{RSVP_Id}/AddMenuOrder")]
+        [HttpPost("{RSVP_Id}/AddMenuOrder")]
         public ActionResult<MenuOrder> AddMenuOder(int RSVP_Id, MenuOrderCreateDTO menuOrderCreateDTO)
         {
             var rsvp = unitOfWork.RSVPRepository.Get((x) => x.Id == RSVP_Id, null, "MenuOrders").FirstOrDefault();
@@ -163,6 +163,16 @@ namespace MatrimonioBackend.Controllers
             return Ok(_mapper.Map<MenuOrderReadDTO>(menuOrder));
         }
 
+        [HttpDelete("MenuOrder/{MenuOrder_Id}")]
+        public ActionResult RemoveMenuOrder(int MenuOrder_Id)
+        {
+
+            unitOfWork.MenuOrderRepository.Delete(MenuOrder_Id);
+            unitOfWork.Save();
+
+            return NoContent();
+
+        }
 
 
     }
