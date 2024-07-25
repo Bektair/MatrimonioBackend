@@ -9,12 +9,12 @@ namespace MatrimonioBackend.Models
     public class RSVP
     {
         public int Id { get; set; }
-        public string Body { get; set; }
         public DateTime Deadline { get; set; }
 
-        public string Status { get; set; }
         public int NumberOfGuests { get; set; }
         public string OtherDietaryRequirements { get; set; }
+        public string Status { get; set; }
+
 
         //Nav
         public IEnumerable<MenuOrder> MenuOrders { get; set; }
@@ -25,6 +25,7 @@ namespace MatrimonioBackend.Models
         public MarryMonioUser Signer { get; set; }
         public Guid SignerId { get; set; }
 
+        public ICollection<RSVPTranslation> Translations { get; set; } = new List<RSVPTranslation>();
 
 
     }

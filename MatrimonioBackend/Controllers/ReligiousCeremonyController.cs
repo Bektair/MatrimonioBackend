@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
+using MatrimonioBackend.DTOs.Location;
+using MatrimonioBackend.DTOs.Participant;
 using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
@@ -27,30 +29,69 @@ namespace MatrimonioBackend.Controllers
         [HttpGet("{religiousCeremony_id}")]
         public ActionResult<ReligiousCeremonyReadDTO> GetReligiousCeremonyById(int religiousCeremony_id)
         {
-            var ReligiousCeremony = _unitOfWork.ReligiousCeremonyRepository.GetByID(religiousCeremony_id);
+            var ReligiousCeremony = _unitOfWork.ReligiousCeremonyRepository.Get((rc)=>rc.Id == religiousCeremony_id, null, "Location,Location.Translations,Translations");
             return _mapper.Map<ReligiousCeremonyReadDTO>(ReligiousCeremony);
         }
 
         [HttpGet("")]
         [EnableQuery]
-        public ActionResult<IEnumerable<ReligiousCeremonyReadDTO>> GetReligiousCeremonys()
+        public ActionResult<IEnumerable<ReligiousCeremonyReadDTO>> GetReligiousCeremonies(string language = "")
         {
 
-            var ReligiousCeremonys = _unitOfWork.ReligiousCeremonyRepository.Get(null,null,"Location");
+            var ReligiousCeremonies = _unitOfWork.ReligiousCeremonyRepository.Get(null,null, "Location,Location.Translations,Translations");
 
-            return _mapper.Map<List<ReligiousCeremonyReadDTO>>(ReligiousCeremonys);
+
+            return Ok(ReligiousCeremonies.Select((rc)=> FlatMapCeremonyTranslations(rc, language)));
         }
+
+        public static ReligiousCeremonyReadDTO FlatMapCeremonyTranslations(ReligiousCeremony ceremony, string language)
+        {
+            ReligiousCeremonyTranslation? translations = (string.IsNullOrEmpty(language)) ?
+                ceremony.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
+                ceremony.Translations.FirstOrDefault((w) => w.Language == language);
+
+            if (translations == null)
+            {
+                translations = ceremony.Translations.FirstOrDefault((w) => w.IsDefaultLanguage);
+            }
+
+            var location = LocationController.FlatMapLocationTranslations(ceremony.Location, language);
+
+            return new ReligiousCeremonyReadDTO()
+            {
+                Id = ceremony.Id,
+                Description = (translations != null) ? translations.Description : "",
+                StartDate = ceremony.StartDate,
+                EndDate = ceremony.EndDate,
+                Language = (translations != null) ? translations.Language : "",
+                IsDefaultLanguage = (translations != null) ? translations.IsDefaultLanguage : false,
+                Location = location,
+                WeddingId = ceremony.WeddingId
+            };
+
+
+        }
+
+
+
+
 
         [HttpPost]
         public ActionResult CreateReligiousCeremony(ReligiousCeremonyCreateDTO createDTO)
         {
 
             var ReligiousCeremony = _mapper.Map<ReligiousCeremony>(createDTO);
-
             _unitOfWork.ReligiousCeremonyRepository.Insert(ReligiousCeremony);
             _unitOfWork.Save();
 
-            return CreatedAtAction("GetReligiousCeremonyById", new { ReligiousCeremony_id = ReligiousCeremony.Id }, _mapper.Map<ReligiousCeremonyReadDTO>(ReligiousCeremony));
+            var location = _unitOfWork.LocationRepository.Get((location) => location.Id == ReligiousCeremony.LocationId, null, "Translations").FirstOrDefault();
+            if(location == null)
+            {
+                return BadRequest("Failure to create the associated location");
+            }
+            ReligiousCeremony.Location = location;
+
+            return CreatedAtAction("GetReligiousCeremonyById", new { ReligiousCeremony_id = ReligiousCeremony.Id }, FlatMapCeremonyTranslations(ReligiousCeremony, createDTO.Language));
         }
 
         [HttpPatch] //Patch kan adde location

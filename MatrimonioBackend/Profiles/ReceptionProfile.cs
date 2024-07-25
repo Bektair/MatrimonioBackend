@@ -8,11 +8,10 @@ namespace MatrimonioBackend.Profiles
     {
         public ReceptionProfile()
         {
-            CreateMap<Reception, ReceptionReadDTO>()
-                .ForMember(dest => dest.MenuOptions, opt => opt.MapFrom<CustomReceptionResolverRead>());
-            CreateMap<ReceptionCreateDTO, Reception>();
-            CreateMap<MenuOptionCreateDTO, MenuOption>();
+            CreateMap<Reception, ReceptionReadDTO>();
+            CreateMap<ReceptionCreateDTO, Reception>().ConvertUsing(new CustomReceptionResolverCreate());
             CreateMap<MenuOption, MenuOptionReadDTO>();
+            CreateMap<MenuOptionCreateDTO, MenuOption>().ConvertUsing(new CustomReceptionMenuOptionResolverCreate());
         }
 
     }

@@ -9,7 +9,7 @@ namespace MatrimonioBackend.Profiles
 
         public ReligiousCeremonyProfile()
         {
-            CreateMap<ReligiousCeremonyCreateDTO, ReligiousCeremony>();
+            CreateMap<ReligiousCeremonyCreateDTO, ReligiousCeremony>().ConvertUsing(new CustomCeremonyResolverCreate());
             CreateMap<ReligiousCeremony, ReligiousCeremonyReadDTO>();
 
 

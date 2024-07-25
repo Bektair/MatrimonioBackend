@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
+using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.Post;
 using MatrimonioBackend.DTOs.Reception;
+using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -27,9 +29,9 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("{reception_id}")]
-        public ActionResult<ReceptionReadDTO> GetReceptionById(int reception_id)
+        public ActionResult<ReceptionReadDTO> GetReceptionById(int reception_id, string language = "")
         {
-            var Reception = _unitOfWork.ReceptionRepository.GetByID(reception_id);
+            var Reception = _unitOfWork.ReceptionRepository.Get((rc)=>rc.Id == reception_id, null, "Translations,MenuOptions,MenuOptions.Translations,Location,Location.Translations").FirstOrDefault();
 
             if(Reception == null)
             {
@@ -37,16 +39,16 @@ namespace MatrimonioBackend.Controllers
             }
 
 
-            return _mapper.Map<ReceptionReadDTO>(Reception);
+            return Ok(FlatMapReceptionTranslations(Reception, language));
         }
 
         [HttpGet("")]
         [EnableQuery]
-        public ActionResult<IEnumerable<ReceptionReadDTO>> GetReceptions(){
-            var Receptions = _unitOfWork.ReceptionRepository.Get(null, null, "MenuOptions,Location"); //Location
+        public ActionResult<IEnumerable<ReceptionReadDTO>> GetReceptions(string language = ""){
+            var Receptions = _unitOfWork.ReceptionRepository.Get(null, null, "Translations,MenuOptions,MenuOptions.Translations,Location,Location.Translations"); //Location
 
-            var receptionReadDTOs =  _mapper.Map<List<ReceptionReadDTO>>(Receptions.ToList());
-            return receptionReadDTOs;
+            var receptionReadDTOs =  Receptions.Select((rc)=> FlatMapReceptionTranslations(rc, language));
+            return Ok(receptionReadDTOs);
         }
 
         [HttpPost]
@@ -57,10 +59,10 @@ namespace MatrimonioBackend.Controllers
             _unitOfWork.ReceptionRepository.Insert(reception);
             _unitOfWork.Save();
 
-            return CreatedAtAction("GetReceptionById", new { reception_id = reception.Id }, _mapper.Map<ReceptionReadDTO>(reception));
+            return CreatedAtAction("GetReceptionById", new { reception_id = reception.Id }, FlatMapReceptionTranslations(reception, createDTO.Language));
         }
 
-        [HttpPatch] //Patch kan adde location
+        [HttpPatch] //Patch kan adde location TODO: Patch broken after translate
         public ActionResult PatchReception(int reception_id, [FromBody]JsonPatchDocument<Reception> patch)
         {
             var reception = _unitOfWork.ReceptionRepository.GetByID(reception_id);
@@ -75,6 +77,61 @@ namespace MatrimonioBackend.Controllers
 
             _unitOfWork.Save();
             return Ok(new { original = _mapper.Map<ReceptionReadDTO>(original), patch = _mapper.Map<ReceptionReadDTO>(reception) });
+        }
+
+        public static ReceptionReadDTO FlatMapReceptionTranslations(Reception reception, string language)
+        {
+            ReceptionTranslation? translations = (string.IsNullOrEmpty(language)) ?
+                reception.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
+                reception.Translations.FirstOrDefault((w) => w.Language == language);
+
+            if (translations == null)
+            {
+                translations = reception.Translations.FirstOrDefault((w) => w.IsDefaultLanguage);
+            }
+
+            LocationReadDTO location = null;
+
+            if(reception.Location != null)
+                location = LocationController.FlatMapLocationTranslations(reception.Location, language);
+
+
+
+            return new ReceptionReadDTO()
+            {
+                Id = reception.Id,
+                Description = (translations != null) ? translations.Description : "",
+                StartDate = reception.StartDate,
+                EndDate = reception.EndDate,
+                Language = (translations != null) ? translations.Language : "",
+                IsDefaultLanguage = (translations != null) ? translations.IsDefaultLanguage : false,
+                Location = location,
+                WeddingId = reception.WeddingId,
+                MenuOptions = (translations != null) ? reception.MenuOptions.Select((r)=>FlatMapMenuOptionTranslations(r, translations.Language)) : null,
+            };
+
+
+        }
+
+        public static MenuOptionReadDTO FlatMapMenuOptionTranslations(MenuOption location, string language)
+        {
+            MenuOptionTranslation? translations = (string.IsNullOrEmpty(language)) ?
+                location.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
+                location.Translations.FirstOrDefault((w) => w.Language == language);
+
+            if (translations == null)
+            {
+                translations = location.Translations.FirstOrDefault((w) => w.IsDefaultLanguage);
+            }
+            return new MenuOptionReadDTO()
+            {
+                Id = location.Id,
+                Language = (translations != null) ? translations.Language : "",
+                IsDefaultLanguage = (translations != null) ? translations.IsDefaultLanguage : false,
+                DishType = (translations != null) ? translations.DishType : "",
+                Image = location.Image,
+                Tags = (translations != null) ? translations.Tags : ""
+            };
         }
 
         [HttpDelete("{reception_id}")]
@@ -100,7 +157,7 @@ namespace MatrimonioBackend.Controllers
             _unitOfWork.Save();
 
             //Gives back a version of the reception with only the new menuItem
-            return Ok( _mapper.Map<MenuOptionReadDTO>(menuOption));
+            return Ok(FlatMapMenuOptionTranslations(menuOption, menuOptionCreate.Language));
         }
 
         [HttpDelete("DeleteMenuOption/{reception_id}/{menuOptionId}")]

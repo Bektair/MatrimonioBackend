@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MatrimonioBackend.DAL
 {
@@ -35,6 +36,7 @@ namespace MatrimonioBackend.DAL
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Include(includeProperty);
+               
             }
 
             if (orderBy != null)
@@ -51,6 +53,8 @@ namespace MatrimonioBackend.DAL
         {
             return dbSet.Find(id);
         }
+
+
 
         public virtual TEntity? GetByIDComposite(object[] ids)
         {
@@ -87,7 +91,10 @@ namespace MatrimonioBackend.DAL
 
         public virtual void Update(TEntity entityToUpdate)
         {
-            dbSet.Attach(entityToUpdate);
+            if (context.Entry(entityToUpdate).State == EntityState.Detached)
+            {
+                dbSet.Attach(entityToUpdate);
+            }
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }

@@ -12,6 +12,8 @@ namespace MatrimonioBackend.Profiles
         {
             CreateMap<ParticipantUpdateDTO, Participant>();
             CreateMap<Participant, ParticipantReadDTO>().ReverseMap();
+            CreateMap<ParticipantCreateDTO, ParticipantTranslation>();
+            CreateMap<ParticipantTranslationCreateDTO, ParticipantTranslation>();
         }
 
     }

@@ -17,6 +17,10 @@
         public string headingFont { get; set; }
         public string title { get; set; }
         public string picture { get; set; }
+        public string language { get; set; }
+        public string defaultLanguage { get; set; }
+        public bool isDefaultLanguage { get; set; }
+
 
     }
 }

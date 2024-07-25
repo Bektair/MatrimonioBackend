@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Azure;
 using ContosoUniversity.DAL;
+using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.RSVP;
+using MatrimonioBackend.DTOs.User;
 using MatrimonioBackend.Models;
+using MatrimonioBackend.Models.Constants;
 using MatrimonioBackend.Profiles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,35 +32,64 @@ namespace MatrimonioBackend.Controllers
 
         [EnableQuery]
         [HttpGet("")]
-        public ActionResult GetRSVPs()
+        public ActionResult GetRSVPs(string language = "")
         {
-            var RSVPs = unitOfWork.RSVPRepository.Get(null, null, "Signer,MenuOrders");
+            var RSVPs = unitOfWork.RSVPRepository.Get(null, null, "Signer,MenuOrders,Translations");
 
-            var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
+            var readRsvps = RSVPs.Select((rs) => FlatMapRSVPTranslations(rs, _mapper.Map<UserGetDTO>(rs.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rs.MenuOrders), language));
 
             return Ok(readRsvps);
         }
 
         [HttpGet("{wedding_id}/{signer_id}")]
-        public ActionResult GetRSVPsByWedding(string wedding_id, string signer_id)
+        public ActionResult GetRSVPsByWedding(string wedding_id, string signer_id, string language="")
         {
 
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id) , null, "Signer,MenuOrders");
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id) , null, "Signer,MenuOrders,Translations");
 
-            var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
+            var readRsvps = RSVPs.Select((rs) => FlatMapRSVPTranslations(rs, _mapper.Map<UserGetDTO>(rs.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rs.MenuOrders), language));
+
 
             return Ok(readRsvps);
         }
 
         [HttpGet("{wedding_id}")]
-        public ActionResult GetRSVPsByWedding(string wedding_id)
+        public ActionResult GetRSVPsByWedding(string wedding_id, string language="")
         {
 
-            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id, null, "Signer,MenuOrders");
+            var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.WeddingId.ToString() == wedding_id, null, "Signer,MenuOrders,Translations");
 
-            var readRsvps = _mapper.Map<IEnumerable<RSVP>, IEnumerable<RSVPReadDTO>>(RSVPs);
+            var readRsvps = RSVPs.Select((rs) => FlatMapRSVPTranslations(rs, _mapper.Map<UserGetDTO>(rs.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rs.MenuOrders), language));
 
             return Ok(readRsvps);
+        }
+
+        public static RSVPReadDTO FlatMapRSVPTranslations(RSVP location, UserGetDTO marryMonioUserRead, IEnumerable<MenuOrderReadDTO> orders, string language)
+        {
+            RSVPTranslation? translations = (string.IsNullOrEmpty(language)) ?
+                location.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
+                location.Translations.FirstOrDefault((w) => w.Language == language);
+
+            if (translations == null)
+            {
+                translations = location.Translations.FirstOrDefault((w) => w.IsDefaultLanguage);
+            }
+
+            return new RSVPReadDTO()
+            {
+                Id = location.Id,
+                Deadline = location.Deadline,
+                NumberOfGuests = location.NumberOfGuests,
+                Status = location.Status,
+                OtherDietaryRequirements = location.OtherDietaryRequirements,
+                Signer = marryMonioUserRead,
+                Body = (translations != null) ? translations.Body : "",
+                Language = (translations != null) ? translations.Language : "",
+                IsDefaultLanguage = (translations != null) ? translations.IsDefaultLanguage : false,
+                MenuOrders = orders,
+            };
+
+
         }
 
         [HttpPost("")]
@@ -67,19 +99,25 @@ namespace MatrimonioBackend.Controllers
             unitOfWork.RSVPRepository.Insert(rsvp);
             unitOfWork.Save();
 
-            return CreatedAtAction("CreateRSVP", new {id = rsvp.Id}, _mapper.Map<RSVP, RSVPReadDTO>(rsvp));
+            return CreatedAtAction("CreateRSVP", new {id = rsvp.Id}, FlatMapRSVPTranslations(rsvp, _mapper.Map<UserGetDTO>(rsvp.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rsvp.MenuOrders), rSVPCreateDTO.Language));
         }
 
         [HttpGet("/{RSVP_id}")]
-        public ActionResult GetRSVPById(int RSVP_id)
+        public ActionResult GetRSVPById(int RSVP_id, string language = "")
         {
-            var RSVP = unitOfWork.RSVPRepository.GetByID(RSVP_id);
-            return Ok(_mapper.Map<RSVP, RSVPReadDTO>(RSVP));
+            var RSVP = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.Id == RSVP_id, null, "Signer,MenuOrders,Translations").FirstOrDefault();
+            if (RSVP == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(FlatMapRSVPTranslations(RSVP, _mapper.Map<UserGetDTO>(RSVP.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(RSVP.MenuOrders), language));
         }
 
 
         /// <summary>
         /// Kan brukes til å blant annet svare RSVP
+        /// TODO: FIX
         /// </summary>
         /// <param name="RSVP_id"></param>
         /// <param name="patch"></param>

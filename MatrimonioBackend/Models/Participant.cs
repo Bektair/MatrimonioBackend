@@ -3,7 +3,6 @@ namespace MatrimonioBackend.Models
 {
     public class Participant
     {
-        public string Role { get; set; }
 
         //Nav
         public Guid UserId { get; set; }
@@ -11,5 +10,8 @@ namespace MatrimonioBackend.Models
 
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
+
+        public ICollection<ParticipantTranslation> Translations { get; set; } = new List<ParticipantTranslation>();
+
     }
 }

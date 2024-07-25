@@ -10,12 +10,14 @@ namespace MatrimonioBackend.DTOs.Reception
         public DateTime EndDate { get; set; }
 
         public string Description { get; set; }
+        public bool IsDefaultLanguage { get; set; }
+        public string Language { get; set; }
 
         //Nav properties
-        public LocationReadDTO Location{ get; set; }
+        public LocationReadDTO? Location{ get; set; }
         public int? WeddingId { get; set; }
 
-        public ICollection<MenuOptionReadDTO> MenuOptions { get; set; } = new List<MenuOptionReadDTO>();
+        public IEnumerable<MenuOptionReadDTO>? MenuOptions { get; set; } = new List<MenuOptionReadDTO>();
 
     }
 }

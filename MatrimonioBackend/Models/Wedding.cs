@@ -8,13 +8,10 @@ using System.Threading.Tasks;
 
 namespace MatrimonioBackend.Models
 {
-    public class Wedding
+    public class Wedding 
     {
         public int id { get; set; }
-        public string title { get; set; }
-        public string picture { get; set; }
-        public string description { get; set; }
-        public string dresscode { get; set; }
+       
         public string primaryColor { get; set; }
         public string secoundaryColor { get; set; }
         public string primaryFontColor { get; set; }
@@ -22,7 +19,7 @@ namespace MatrimonioBackend.Models
         public string backgroundImage   { get; set; }
         public string bodyFont { get; set; }
         public string headingFont { get; set; }
-
+        public string picture { get; set; }
 
 
         //NavProperties
@@ -30,6 +27,7 @@ namespace MatrimonioBackend.Models
         public ReligiousCeremony? ReligiousCeremony{ get; set; }
 
         public ICollection<Participant> Participants { get; set; } = new List<Participant>();
+        public ICollection<WeddingTranslation> Translations { get; set; } = new List<WeddingTranslation>();
 
 
         public ICollection<RSVP> RSVPs { get; set; } = new List<RSVP>();

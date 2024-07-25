@@ -11,8 +11,7 @@ namespace MatrimonioBackend.Models
     {
 
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
+
 
         //Nav properties
         public MarryMonioUser Author { get; set; }
@@ -20,7 +19,9 @@ namespace MatrimonioBackend.Models
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
 
-        public ICollection<PostImage> images { get; set; }
+        public IEnumerable<PostTranslation> Translations { get; set; }
+
+        public ICollection<PostImage> Images { get; set; }
 
     }
 }

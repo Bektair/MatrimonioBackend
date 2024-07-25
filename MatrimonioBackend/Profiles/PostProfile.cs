@@ -11,6 +11,7 @@ namespace MatrimonioBackend.Profiles
         {
             CreateMap<PostCreateDTO, Post>();
             CreateMap<Post, PostReadDTO>();
+            CreateMap<PostImage, PostImageReadDTO>();
 
         }
     }

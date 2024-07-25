@@ -13,6 +13,9 @@ namespace MatrimonioBackend.DTOs.RSVP
         public int NumberOfGuests { get; set; }
         public string OtherDietaryRequirements { get; set; }
 
+        public string Language { get; set; }
+        public bool IsDefaultLanguage { get; set; }
+
         public UserGetDTO Signer { get; set; }
         public IEnumerable<MenuOrderReadDTO> MenuOrders { get; set; }
 

@@ -14,6 +14,8 @@ namespace MatrimonioBackend.DTOs.RSVP
         public string OtherDietaryRequirements { get; set; }
         public Guid SignerId { get; set; }
         public int WeddingId { get; set; }
+        public string Language { get; set; }
+
 
     }
 }

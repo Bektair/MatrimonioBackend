@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ContosoUniversity.DAL;
+using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.Post;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
 
 namespace MatrimonioBackend.Controllers
@@ -26,25 +28,53 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("{post_id}")]
-        public ActionResult<Post> GetPostById(int post_id)
+        public ActionResult<Post> GetPostById(int post_id, string language)
         {
-            var post = _unitOfWork.PostRepository.GetByID(post_id);
+            var post = _unitOfWork.PostRepository.Get((post)=>post.Id == post_id, null, "Translations,Images").FirstOrDefault();
+            if(post == null)
+            {
+                return NotFound();
+            }
 
-            return Ok(post);
+            return Ok(FlatMapPostTranslations(post, language));
         }
 
         [HttpGet("")]
         [EnableQuery]
-        public ActionResult<IEnumerable<Post>> Get()
+        public ActionResult<IEnumerable<Post>> Get(string language = "")
         {
-//            Expression<Func<TEntity, bool>> filter = null, //We send in a lambda expression based on entity ex. student => student.LastName == "Smith"
+            //            Expression<Func<TEntity, bool>> filter = null, //We send in a lambda expression based on entity ex. student => student.LastName == "Smith"
 
-            var posts = _unitOfWork.PostRepository.Get();
-            
-            return Ok(posts);
+            var posts = _unitOfWork.PostRepository.Get(null, null, "Translations,Images");
+            if (posts == null)
+            {
+                return NotFound();
+            }
+            return Ok(posts.Select((post)=>FlatMapPostTranslations(post, language)));
         }
 
+        public PostReadDTO FlatMapPostTranslations(Post post, string language)
+        {
+            PostTranslation? translations = (string.IsNullOrEmpty(language)) ?
+                post.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
+                post.Translations.FirstOrDefault((w) => w.Language == language);
 
+            if (translations == null)
+            {
+                translations = post.Translations.FirstOrDefault((w) => w.IsDefaultLanguage);
+            }
+            return new PostReadDTO()
+            {
+                Id = post.Id,
+                Title = (translations != null) ? translations.Title : "",
+                Body = (translations != null) ? translations.Body : "",
+                AuthorId = post.AuthorId,
+                WeddingId = post.WeddingId,
+                Images = _mapper.Map<ICollection<PostImageReadDTO>>(post.Images),
+                Language = (translations != null) ? translations.Language : "",
+                IsDefaultLanguage = (translations != null) ? translations.IsDefaultLanguage : false
+            };
+        }
 
         [HttpPost("")]
         public ActionResult<PostReadDTO> Create(PostCreateDTO postCreate)
