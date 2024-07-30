@@ -4,9 +4,11 @@ using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.DTOs.User;
+using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using MatrimonioBackend.Models.Constants;
 using MatrimonioBackend.Profiles;
+using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -53,7 +55,7 @@ namespace MatrimonioBackend.Controllers
             return Ok(readRsvps);
         }
 
-        [HttpGet("{wedding_id}")]
+        [HttpGet("Wedding/{wedding_id}")]
         public ActionResult GetRSVPsByWedding(string wedding_id, string language="")
         {
 
@@ -102,7 +104,7 @@ namespace MatrimonioBackend.Controllers
             return CreatedAtAction("CreateRSVP", new {id = rsvp.Id}, FlatMapRSVPTranslations(rsvp, _mapper.Map<UserGetDTO>(rsvp.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rsvp.MenuOrders), rSVPCreateDTO.Language));
         }
 
-        [HttpGet("/{RSVP_id}")]
+        [HttpGet("{RSVP_id}")]
         public ActionResult GetRSVPById(int RSVP_id, string language = "")
         {
             var RSVP = unitOfWork.RSVPRepository.Get((rsvp) => rsvp.Id == RSVP_id, null, "Signer,MenuOrders,Translations").FirstOrDefault();
@@ -122,7 +124,7 @@ namespace MatrimonioBackend.Controllers
         /// <param name="RSVP_id"></param>
         /// <param name="patch"></param>
         /// <returns></returns>
-        [HttpPatch("/api/[controller]/{RSVP_id}")]
+        [HttpPatch("{RSVP_id}")]
         public ActionResult UpdateRSVP(int RSVP_id, [FromBody] JsonPatchDocument<RSVPUpdateDTO> patch)
         {
             var RSVPs = unitOfWork.RSVPRepository.Get((rsvp) => RSVP_id == rsvp.Id, null, "Signer");
@@ -149,7 +151,7 @@ namespace MatrimonioBackend.Controllers
             return Ok(new { original= Original, patched = _mapper.Map<RSVP, RSVPReadDTO>(RSVP) });
         }
 
-        [HttpDelete("/{RSVP_id}")]
+        [HttpDelete("{RSVP_id}")]
         public ActionResult DeleteRSVP(int RSVP_id)
         {
             bool deleted = unitOfWork.RSVPRepository.Delete(RSVP_id);
@@ -159,11 +161,28 @@ namespace MatrimonioBackend.Controllers
             
             unitOfWork.Save();
             return NoContent();
-            
-
         }
 
-        [HttpGet("/MenuOrder/{Menuorder_id}")]
+        [HttpPost("{rsvp_id}/Translation")]
+        public ActionResult AddRSVPTranslation(string rsvp_id, RSVPTranslationCreateDTO createDTO)
+        {
+            var RSVP = unitOfWork.RSVPRepository.Get((rsvp) => rsvp_id == rsvp.Id.ToString(), null, "Translations").FirstOrDefault();
+            if (RSVP == null) return NotFound();
+            if (TranslationService.TranslationAllreadyExists(RSVP.Translations, createDTO.Language))
+            {
+                var translate = RSVP.Translations.FirstOrDefault((trans) => trans.Language == createDTO.Language.ToUpper());
+                if(translate != null) { 
+                    translate.Body = createDTO.Body;
+                }
+            }else { 
+                var mapped = _mapper.Map<RSVPTranslation>(createDTO);
+                RSVP.Translations.Add(mapped);
+            }
+            unitOfWork.Save();
+            return NoContent();
+        }
+
+        [HttpGet("MenuOrder/{Menuorder_id}")]
         public ActionResult<MenuOrder> GetMenuOrder(int Menuorder_id)
         {
             var menuOrder = unitOfWork.MenuOrderRepository.Get((x) => x.Id == Menuorder_id).FirstOrDefault();

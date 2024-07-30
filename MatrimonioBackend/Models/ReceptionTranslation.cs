@@ -1,6 +1,6 @@
 ﻿namespace MatrimonioBackend.Models
 {
-    public class ReceptionTranslation
+    public class ReceptionTranslation : ITranslation
     {
         public string Description { get; set; }
         public bool IsDefaultLanguage { get; set; }

@@ -34,4 +34,20 @@ namespace MatrimonioBackend.Profiles
         }
     }
 
+    public class CustomCeremonyResolverTranslateCreate
+    : ITypeConverter<ReligiousCeremonyTranslationCreateDTO, ReligiousCeremonyTranslation>
+    {
+        public ReligiousCeremonyTranslation Convert(ReligiousCeremonyTranslationCreateDTO source, ReligiousCeremonyTranslation destination, ResolutionContext context)
+        {
+            var rcTranslation = new ReligiousCeremonyTranslation()
+            {
+                Description = source.Description,
+                Language = source.Language,
+                IsDefaultLanguage= source.IsDefaultLanguage,
+            };
+
+            return rcTranslation;
+        }
+    }
+
 }

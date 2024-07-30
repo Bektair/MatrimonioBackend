@@ -5,6 +5,7 @@ using MatrimonioBackend.DTOs.Participant;
 using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +28,15 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("{religiousCeremony_id}")]
-        public ActionResult<ReligiousCeremonyReadDTO> GetReligiousCeremonyById(int religiousCeremony_id)
+        public ActionResult<ReligiousCeremonyReadDTO> GetReligiousCeremonyById(int religiousCeremony_id, string language="")
         {
-            var ReligiousCeremony = _unitOfWork.ReligiousCeremonyRepository.Get((rc)=>rc.Id == religiousCeremony_id, null, "Location,Location.Translations,Translations");
-            return _mapper.Map<ReligiousCeremonyReadDTO>(ReligiousCeremony);
+            var ceremony = _unitOfWork.ReligiousCeremonyRepository.Get((rc)=>rc.Id == religiousCeremony_id, null, "Location,Location.Translations,Translations").FirstOrDefault();
+
+            if (ceremony == null)
+            {
+                return NotFound();
+            } 
+            return Ok(FlatMapCeremonyTranslations(ceremony, language));
         }
 
         [HttpGet("")]
@@ -48,7 +54,7 @@ namespace MatrimonioBackend.Controllers
         {
             ReligiousCeremonyTranslation? translations = (string.IsNullOrEmpty(language)) ?
                 ceremony.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
-                ceremony.Translations.FirstOrDefault((w) => w.Language == language);
+                ceremony.Translations.FirstOrDefault((w) => w.Language == language.ToUpper());
 
             if (translations == null)
             {
@@ -70,6 +76,34 @@ namespace MatrimonioBackend.Controllers
             };
 
 
+        }
+
+
+        [HttpPost("{ceremony_id}/Translation")]
+        public ActionResult AddTranslationReligiousCeremony(int ceremony_id, ReligiousCeremonyTranslationCreateDTO createDTO)
+        {
+            var ReligiousCeremonies = _unitOfWork.ReligiousCeremonyRepository.Get((rc) => rc.Id == ceremony_id, null, "Translations").FirstOrDefault();
+
+            if (ReligiousCeremonies == null)
+            {
+                return NotFound();
+            }
+
+            if (TranslationService.TranslationAllreadyExists(ReligiousCeremonies.Translations, createDTO.Language))
+            {
+                var translate = ReligiousCeremonies.Translations.FirstOrDefault((trans) => trans.Language == createDTO.Language.ToUpper());
+                if (translate != null)
+                {
+                    translate.Description = createDTO.Description;
+                }
+            }
+            else
+            {
+                var mapped = _mapper.Map<ReligiousCeremonyTranslation>(createDTO);
+                ReligiousCeremonies.Translations.Add(mapped);
+            }
+            _unitOfWork.Save();
+            return NoContent();
         }
 
 

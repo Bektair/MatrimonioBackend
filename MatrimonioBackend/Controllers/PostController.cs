@@ -4,6 +4,8 @@ using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.Post;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using MatrimonioBackend.Models.Constants;
+using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("{post_id}")]
-        public ActionResult<Post> GetPostById(int post_id, string language)
+        public ActionResult<PostReadDTO> GetPostById(int post_id, string language)
         {
             var post = _unitOfWork.PostRepository.Get((post)=>post.Id == post_id, null, "Translations,Images").FirstOrDefault();
             if(post == null)
@@ -36,12 +38,12 @@ namespace MatrimonioBackend.Controllers
                 return NotFound();
             }
 
-            return Ok(FlatMapPostTranslations(post, language));
+            return Ok(FlatMapPostTranslations(post, _mapper.Map<ICollection<PostImageReadDTO>>(post.Images), language));
         }
 
         [HttpGet("")]
         [EnableQuery]
-        public ActionResult<IEnumerable<Post>> Get(string language = "")
+        public ActionResult<IEnumerable<PostReadDTO>> Get(string language = "")
         {
             //            Expression<Func<TEntity, bool>> filter = null, //We send in a lambda expression based on entity ex. student => student.LastName == "Smith"
 
@@ -50,10 +52,10 @@ namespace MatrimonioBackend.Controllers
             {
                 return NotFound();
             }
-            return Ok(posts.Select((post)=>FlatMapPostTranslations(post, language)));
+            return Ok(posts.Select((post)=>FlatMapPostTranslations(post, _mapper.Map<ICollection<PostImageReadDTO>>(post.Images), language)));
         }
 
-        public PostReadDTO FlatMapPostTranslations(Post post, string language)
+        public static PostReadDTO FlatMapPostTranslations(Post post, ICollection<PostImageReadDTO> dtos, string language)
         {
             PostTranslation? translations = (string.IsNullOrEmpty(language)) ?
                 post.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
@@ -70,7 +72,7 @@ namespace MatrimonioBackend.Controllers
                 Body = (translations != null) ? translations.Body : "",
                 AuthorId = post.AuthorId,
                 WeddingId = post.WeddingId,
-                Images = _mapper.Map<ICollection<PostImageReadDTO>>(post.Images),
+                Images = dtos,
                 Language = (translations != null) ? translations.Language : "",
                 IsDefaultLanguage = (translations != null) ? translations.IsDefaultLanguage : false
             };
@@ -106,6 +108,25 @@ namespace MatrimonioBackend.Controllers
 
             return Ok(new { original = _mapper.Map<PostReadDTO>(originalPost), patch = _mapper.Map<PostReadDTO>(post) });
 
+        }
+        [HttpPost("{post_id}/Translation")]
+        public ActionResult AddTranslation(PostTranslationCreateDTO createDTO, int post_id)
+        {
+            if (!Language.IsSupported(createDTO.Language))
+                return BadRequest("Selected language is not supported");
+
+            var post = _unitOfWork.PostRepository.Get((e) => e.Id == post_id, null, "Translations").FirstOrDefault();
+            if (post == null)
+                return NotFound();
+
+            if (TranslationService.TranslationAllreadyExists(post.Translations, createDTO.Language))
+            {
+                return BadRequest("Selected language allready Exsists");
+            }
+            var mapped = _mapper.Map<PostTranslation>(createDTO);
+            post.Translations.Add(mapped);
+            _unitOfWork.Save();
+            return NoContent();
         }
 
         [HttpDelete]

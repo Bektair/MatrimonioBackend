@@ -11,6 +11,7 @@ namespace MatrimonioBackend.Profiles
         {
             CreateMap<ReligiousCeremonyCreateDTO, ReligiousCeremony>().ConvertUsing(new CustomCeremonyResolverCreate());
             CreateMap<ReligiousCeremony, ReligiousCeremonyReadDTO>();
+            CreateMap<ReligiousCeremonyTranslationCreateDTO, ReligiousCeremonyTranslation>().ConvertUsing(new CustomCeremonyResolverTranslateCreate());
 
 
 

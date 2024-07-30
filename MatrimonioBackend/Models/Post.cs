@@ -19,7 +19,7 @@ namespace MatrimonioBackend.Models
         public Wedding Wedding { get; set; }
         public int WeddingId { get; set; }
 
-        public IEnumerable<PostTranslation> Translations { get; set; }
+        public ICollection<PostTranslation> Translations { get; set; }
 
         public ICollection<PostImage> Images { get; set; }
 

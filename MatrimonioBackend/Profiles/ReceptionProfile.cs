@@ -12,6 +12,7 @@ namespace MatrimonioBackend.Profiles
             CreateMap<ReceptionCreateDTO, Reception>().ConvertUsing(new CustomReceptionResolverCreate());
             CreateMap<MenuOption, MenuOptionReadDTO>();
             CreateMap<MenuOptionCreateDTO, MenuOption>().ConvertUsing(new CustomReceptionMenuOptionResolverCreate());
+            CreateMap<ReceptionTranslationCreateDTO, ReceptionTranslation>().ConvertUsing(new CustomReceptionResolverTranslateCreate());
         }
 
     }

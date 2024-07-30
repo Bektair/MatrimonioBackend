@@ -64,11 +64,11 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpPatch("{Location_id}")] //Patch kan adde location
-        public ActionResult PatchLocation(int Location_id, [FromBody] JsonPatchDocument<Location> patch, string language="")
+        public ActionResult PatchLocation(int Location_id, [FromBody] JsonPatchDocument<LocationUpdateDTO> patch, string language="")
         {
-            var Location = _unitOfWork.LocationRepository.GetByID(Location_id);
+            var Location = _unitOfWork.LocationRepository.Get((loc) => loc.Id == Location_id, null, "Translations").FirstOrDefault();
             if (Location == null) return NotFound();
-            var original = Location.DeepCopy<Location>();
+            var original = FlatMapLocationTranslations(Location, language);
 
             var lang  = Location.Translations.FirstOrDefault((trans) => trans.Language == language.ToUpper());
 
@@ -100,7 +100,7 @@ namespace MatrimonioBackend.Controllers
             return NoContent();
         }
 
-        [HttpPost("location/{location_id}/translation")]
+        [HttpPost("{location_id}/Translation")]
         public ActionResult AddLocationTranslation(int location_id, LocationTranslationCreateDTO createDTO)
         {
             var location = _unitOfWork.LocationRepository.Get((l)=>l.Id ==  location_id, null, "Translations").FirstOrDefault();

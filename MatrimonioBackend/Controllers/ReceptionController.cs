@@ -6,6 +6,7 @@ using MatrimonioBackend.DTOs.Reception;
 using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
+using MatrimonioBackend.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -133,6 +134,34 @@ namespace MatrimonioBackend.Controllers
                 Tags = (translations != null) ? translations.Tags : ""
             };
         }
+
+        [HttpPost("{reception_id}/Translation")]
+        public ActionResult AddTranslationReception(int reception_id, ReceptionTranslationCreateDTO createDTO)
+        {
+            var Reception = _unitOfWork.ReceptionRepository.Get((rc) => rc.Id == reception_id, null, "Translations").FirstOrDefault();
+
+            if (Reception == null)
+            {
+                return NotFound();
+            }
+
+            if (TranslationService.TranslationAllreadyExists(Reception.Translations, createDTO.Language))
+            {
+                var translate = Reception.Translations.FirstOrDefault((trans) => trans.Language == createDTO.Language.ToUpper());
+                if (translate != null)
+                {
+                    translate.Description = createDTO.Description;
+                }
+            }
+            else
+            {
+                var mapped = _mapper.Map<ReceptionTranslation>(createDTO);
+                Reception.Translations.Add(mapped);
+            }
+            _unitOfWork.Save();
+            return NoContent();
+        }
+
 
         [HttpDelete("{reception_id}")]
         public ActionResult DeleteReception(int reception_id)

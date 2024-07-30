@@ -43,8 +43,8 @@ namespace MatrimonioBackend.Profiles
                 var actualValue = stringTranslate.Substring(1, stringTranslate.Length - 1);
                 var translation = JsonSerializer.Deserialize<LocationTranslation>(stringTranslate);
 
-                var translationPatch = JsonPatchService<LocationTranslation>.MakePatch(translation);
-
+                var translationPatch = JsonPatchService<LocationTranslation>.MakePatch(translation).Where(op => op != null & op.path != "IsDefaultLanguage");
+                
 
                 var rsvpPatch = new JsonPatchDocument<LocationTranslation>(translationPatch.ToList(), source.ContractResolver);
 

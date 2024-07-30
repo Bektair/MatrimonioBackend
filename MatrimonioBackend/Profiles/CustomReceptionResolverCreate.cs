@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.Reception;
+using MatrimonioBackend.DTOs.ReligiousCeremony;
 using MatrimonioBackend.DTOs.RSVP;
 using MatrimonioBackend.Models;
 
@@ -52,6 +53,21 @@ namespace MatrimonioBackend.Profiles
         }
     }
 
+    public class CustomReceptionResolverTranslateCreate
+   : ITypeConverter<ReceptionTranslationCreateDTO, ReceptionTranslation>
+    {
+        public ReceptionTranslation Convert(ReceptionTranslationCreateDTO source, ReceptionTranslation destination, ResolutionContext context)
+        {
+            var rcTranslation = new ReceptionTranslation()
+            {
+                Description = source.Description,
+                Language = source.Language,
+                IsDefaultLanguage = source.IsDefaultLanguage,
+            };
+
+            return rcTranslation;
+        }
+    }
 
 }
 
