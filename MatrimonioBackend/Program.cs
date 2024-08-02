@@ -49,6 +49,9 @@ builder.Host.ConfigureAppConfiguration((configBuilder) =>
 
 var AUTH0_DOMAIN = builder.Configuration.GetValue<string>("AUTH0_DOMAIN");
 
+Console.WriteLine("DOMAIN_OUT");
+Console.WriteLine(AUTH0_DOMAIN);
+
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson()
@@ -97,11 +100,7 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 }));
 
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("read:users", policy =>
-        policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://{AUTH0_DOMAIN}/")));
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 

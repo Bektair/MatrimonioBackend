@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MatrimonioBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
@@ -27,7 +28,6 @@ namespace MatrimonioBackend.Controllers
 
         // GET: UserController
         [HttpGet("")]
-        [Authorize("read:users")]
         public ActionResult<IEnumerable<UserGetDTO>> GetUsers () 
         {
             var users = unitOfWork.UserRepository.Get();
