@@ -3,6 +3,7 @@ using ContosoUniversity.DAL;
 using MatrimonioBackend.DTOs.Location;
 using MatrimonioBackend.DTOs.Post;
 using MatrimonioBackend.DTOs.RSVP;
+using MatrimonioBackend.DTOs.Wedding;
 using MatrimonioBackend.Models;
 using MatrimonioBackend.Models.Constants;
 using MatrimonioBackend.Service;
@@ -46,7 +47,7 @@ namespace MatrimonioBackend.Controllers
         public ActionResult<IEnumerable<PostReadDTO>> Get(string language = "")
         {
             //            Expression<Func<TEntity, bool>> filter = null, //We send in a lambda expression based on entity ex. student => student.LastName == "Smith"
-
+            var userUnit = User;
             var posts = _unitOfWork.PostRepository.Get(null, null, "Translations,Images");
             if (posts == null)
             {
@@ -59,7 +60,7 @@ namespace MatrimonioBackend.Controllers
         {
             PostTranslation? translations = (string.IsNullOrEmpty(language)) ?
                 post.Translations.FirstOrDefault((w) => w.IsDefaultLanguage) :
-                post.Translations.FirstOrDefault((w) => w.Language == language);
+                post.Translations.FirstOrDefault((w) => w.Language == language); 
 
             if (translations == null)
             {
@@ -82,23 +83,36 @@ namespace MatrimonioBackend.Controllers
         public ActionResult<PostReadDTO> Create(PostCreateDTO postCreate)
         {
             var post = _mapper.Map<Post>(postCreate);
+            
             _unitOfWork.PostRepository.Insert(post);
             _unitOfWork.Save();
-            return CreatedAtAction("GetPostById", new { post_id = post.Id }, _mapper.Map<PostReadDTO>(post));
+            return CreatedAtAction("GetPostById", new { post_id = post.Id }, FlatMapPostTranslations(post, postCreate.Images, postCreate.Language));
 
 
         }
 
-        [HttpPatch("")]
-        public ActionResult Patch(int post_id, [FromBody] JsonPatchDocument<Post> patch)
+        [HttpPatch("{Post_id}")]
+        public ActionResult Patch(int post_id, [FromBody] JsonPatchDocument<PostUpdateDTO> patch, string language = "")
         {
-            var post = _unitOfWork.PostRepository.GetByID(post_id);
+            var post = _unitOfWork.PostRepository.Get(((postGet) => postGet.Id == post_id), null, "Translations,Images").FirstOrDefault();
             if(post == null) { return NotFound();  }
+            var PostRead = _mapper.Map<Post, PostReadDTO>(post);
+            var originalPost = PostRead.DeepCopy<PostReadDTO>();
 
-            var originalPost = post.DeepCopy<Post>();
+            var lang = post.Translations.FirstOrDefault((trans) => trans.Language == language.ToUpper());
 
-            patch.ApplyTo(post, ModelState);
+            if (lang == null)
+            {
+                return NotFound("Translation not found");
+            }
 
+            var postPatch = _mapper.Map<JsonPatchDocument<Post>>(patch);
+            var postTranslationPatch = _mapper.Map<JsonPatchDocument<PostTranslation>>(patch);
+            
+
+            postPatch.ApplyTo(post, ModelState);
+            postTranslationPatch.ApplyTo(lang, ModelState);
+                                                
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -110,7 +124,7 @@ namespace MatrimonioBackend.Controllers
 
         }
         [HttpPost("{post_id}/Translation")]
-        public ActionResult AddTranslation(PostTranslationCreateDTO createDTO, int post_id)
+        public ActionResult AddTranslation(PostTranslationCreateDTO createDTO, int post_id, bool update)
         {
             if (!Language.IsSupported(createDTO.Language))
                 return BadRequest("Selected language is not supported");
@@ -119,11 +133,19 @@ namespace MatrimonioBackend.Controllers
             if (post == null)
                 return NotFound();
 
-            if (TranslationService.TranslationAllreadyExists(post.Translations, createDTO.Language))
+            if (!update && TranslationService.TranslationAllreadyExists(post.Translations, createDTO.Language))
             {
                 return BadRequest("Selected language allready Exsists");
             }
             var mapped = _mapper.Map<PostTranslation>(createDTO);
+
+            if (update)
+            {
+                var toBeChanged = post.Translations.FirstOrDefault((x) => x.PostId == post_id && x.Language == createDTO.Language);
+                if (toBeChanged != null)
+                    post.Translations.Remove(toBeChanged);
+            }
+
             post.Translations.Add(mapped);
             _unitOfWork.Save();
             return NoContent();

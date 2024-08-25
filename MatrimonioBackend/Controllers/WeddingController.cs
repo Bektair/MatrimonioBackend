@@ -177,9 +177,9 @@ namespace MatrimonioBackend.Controllers
             var WeddingReadOriginal = _mapper.Map<Wedding, WeddingReadDTO>(Wedding);
             var Original = WeddingReadOriginal.DeepCopy<WeddingReadDTO>();
 
-            var lang = Wedding.Translations.FirstOrDefault((trans) => trans.Language == language.ToUpper());
+            var weddingTranslation = Wedding.Translations.FirstOrDefault((trans) => trans.Language == language.ToUpper());
 
-            if (lang == null)
+            if (weddingTranslation == null)
             {
                 return NotFound("Translation not found");
             }
@@ -191,7 +191,7 @@ namespace MatrimonioBackend.Controllers
 
 
             weddingPatch.ApplyTo(Wedding, ModelState);
-            weddingTranslationPatch.ApplyTo((WeddingTranslation)lang, ModelState);
+            weddingTranslationPatch.ApplyTo((WeddingTranslation)weddingTranslation, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

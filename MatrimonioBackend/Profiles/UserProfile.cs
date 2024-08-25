@@ -11,6 +11,7 @@ namespace MatrimonioBackend.Profiles
 
         public UserProfile() {
             CreateMap<UserCreateDTO, MarryMonioUser>();
+            CreateMap<UserSocialCreateDTO, MarryMonioUser>();
             CreateMap<MarryMonioUser, UserGetDTO>();
             CreateMap<JsonPatchDocument<UserUpdateDTO>, JsonPatchDocument<MarryMonioUser>>()
                 .ConvertUsing(new CustomUserRevolverUpdate());

@@ -530,7 +530,7 @@ namespace MatrimonioBackend.DAL
                  .HasData(new PostTranslation() { PostId = 3, Language = Language.EN, IsDefaultLanguage = false, Title = "Winter Marriage", Body = "Hello there friends" });
 
             modelBuilder.Entity<PostImage>()
-                .HasData(new PostImage() { Id = 1, PostId = 1, URI = "https://no.wikipedia.org/wiki/Johnny_Depp#/media/Fil:Johnny_Depp_2020.jpg", Role = "MainImage", Size = "245kb" });
+                .HasData(new PostImage() { Id = 1, PostId = 1, URI = "https://upload.wikimedia.org/wikipedia/commons/2/21/Johnny_Depp_2020.jpg", Role = "MainImage", Size = "245kb" });
             modelBuilder.Entity<PostImage>()
                 .HasData(new PostImage() { Id = 2, PostId = 1, URI = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Johnny_Depp%27s_signature.svg/512px-Johnny_Depp%27s_signature.svg.png", Role = "SideImage", Size = "15kb" });
             modelBuilder.Entity<PostImage>()
