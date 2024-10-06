@@ -22,6 +22,7 @@ namespace MatrimonioBackend.Models
         public string picture { get; set; }
 
 
+
         //NavProperties
         public Reception? Reception { get; set; } 
         public ReligiousCeremony? ReligiousCeremony{ get; set; }

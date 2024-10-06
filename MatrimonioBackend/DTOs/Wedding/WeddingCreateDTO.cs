@@ -16,6 +16,8 @@
         public string dresscode { get; set; }
         public string title { get; set; }
         public string picture { get; set; }
+        public string RSVPBody { get; set; }
+
 
     }
 }

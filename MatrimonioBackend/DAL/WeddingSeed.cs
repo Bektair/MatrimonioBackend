@@ -41,6 +41,7 @@ namespace MatrimonioBackend.DAL
                     primaryFontColor = "#cca548",
                     secoundaryFontColor = "#1cc642",
                     picture = "https://res.cloudinary.com/dgegmm2pt/image/upload/v1719219745/weddings-2015-02-johnny-depp-amber-heard-wedding-pictures-celebrity-weddings-0202-getty-main_spytsr.webp",
+                    
                 });
             modelBuilder.Entity<WeddingTranslation>()
                 .HasData(new Models.WeddingTranslation
@@ -50,7 +51,9 @@ namespace MatrimonioBackend.DAL
                     IsDefaultLanguage = true,
                     Language = "EN",
                     Title = "J + A, Hasta la muerte",
-                    WeddingId = 1
+                    WeddingId = 1,
+                    RSVPBody = "Wanna join my wedding?"
+
                 });
             modelBuilder.Entity<WeddingTranslation>()
             .HasData(new Models.WeddingTranslation
@@ -60,7 +63,8 @@ namespace MatrimonioBackend.DAL
                 IsDefaultLanguage = false,
                 Language = "IT",
                 Title = "J + A, arrividerci morta",
-                WeddingId = 1
+                WeddingId = 1,
+                RSVPBody = "Vieni alla nostra festa?"
             });
             modelBuilder.Entity<Wedding>()
                 .HasData(new Wedding
@@ -84,7 +88,8 @@ namespace MatrimonioBackend.DAL
                     IsDefaultLanguage = true,
                     Language = "EN",
                     Title = "Brudeferd i Hardanger",
-                    WeddingId = 2
+                    WeddingId = 2,
+                    RSVPBody = "Vil du kommer på bryllup?"
                 });
             modelBuilder.Entity<Wedding>()
                 .HasData(new Models.Wedding
@@ -107,7 +112,8 @@ namespace MatrimonioBackend.DAL
                 IsDefaultLanguage = true,
                 Language = Language.IT,
                 Title = "Amore",
-                WeddingId = 3
+                WeddingId = 3,
+                RSVPBody = "Vieni alla nostra festa?"
             });
 
 

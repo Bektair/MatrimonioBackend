@@ -77,7 +77,8 @@ namespace MatrimonioBackend.Controllers
                 dresscode = (translations != null) ? translations.Dresscode : "",
                 title = (translations != null) ? translations.Title : "",
                 isDefaultLanguage = (translations != null) ? (translations.IsDefaultLanguage) ? true : false : true,
-                defaultLanguage = (defaultLanguage != null) ? defaultLanguage.Language : ""
+                defaultLanguage = (defaultLanguage != null) ? defaultLanguage.Language : "",
+                RSVPBody = (translations != null) ? translations.RSVPBody : "",
             };
 
 

@@ -20,6 +20,8 @@
         public string language { get; set; }
         public string defaultLanguage { get; set; }
         public bool isDefaultLanguage { get; set; }
+        public string RSVPBody { get; set; }
+
 
 
     }

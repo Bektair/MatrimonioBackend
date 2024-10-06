@@ -44,13 +44,17 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpGet("{wedding_id}/{signer_id}")]
-        public ActionResult GetRSVPsByWedding(string wedding_id, string signer_id, string language="")
+        public ActionResult<RSVPReadDTO[]> GetRSVPsByWedding(string wedding_id, string signer_id, string language="")
         {
 
             var RSVPs = unitOfWork.RSVPRepository.Get((rsvp)=>rsvp.WeddingId.ToString() == wedding_id && rsvp.SignerId== Guid.Parse(signer_id) , null, "Signer,MenuOrders,Translations");
 
             var readRsvps = RSVPs.Select((rs) => FlatMapRSVPTranslations(rs, _mapper.Map<UserGetDTO>(rs.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rs.MenuOrders), language));
 
+            if(readRsvps != null)
+            {
+                return NotFound("No RSVP found");
+            }
 
             return Ok(readRsvps);
         }
@@ -95,11 +99,23 @@ namespace MatrimonioBackend.Controllers
         }
 
         [HttpPost("")]
-        public ActionResult CreateRSVP(RSVPCreateDTO rSVPCreateDTO)
+        public ActionResult<RSVPReadDTO> CreateRSVP(RSVPCreateDTO rSVPCreateDTO)
         {
             var rsvp = _mapper.Map<RSVP>(rSVPCreateDTO);
+
+
+
             unitOfWork.RSVPRepository.Insert(rsvp);
             unitOfWork.Save();
+
+            var signer = unitOfWork.UserRepository.Get((user) => user.Id == rsvp.SignerId).FirstOrDefault();
+
+            if(signer == null) {
+                return BadRequest("Unable to find the signer in db");
+            }else 
+            rsvp.Signer = signer;
+             
+
 
             return CreatedAtAction("CreateRSVP", new {id = rsvp.Id}, FlatMapRSVPTranslations(rsvp, _mapper.Map<UserGetDTO>(rsvp.Signer), _mapper.Map<IEnumerable<MenuOrderReadDTO>>(rsvp.MenuOrders), rSVPCreateDTO.Language));
         }

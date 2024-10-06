@@ -25,6 +25,8 @@ namespace MatrimonioBackend.DTOs.Wedding
         public string title { get; set; }
         public string description { get; set; }
         public string dresscode { get; set; }
+        public string RSVPBody { get; set; }
+
 
     }
 }

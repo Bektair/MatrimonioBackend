@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 
 namespace MatrimonioBackend.Controllers
@@ -20,10 +21,13 @@ namespace MatrimonioBackend.Controllers
 
         public UnitOfWork unitOfWork = new UnitOfWork();
         public IMapper _mapper { get; set; }
+        public IConfiguration _configuration { get; set; }
 
-        public UserController(IMapper mapper)
+        public UserController(IMapper mapper, IConfiguration configuration)
         {
-            _mapper = mapper;   
+            _mapper = mapper;
+            _configuration = configuration;
+
         }
 
 
@@ -125,11 +129,62 @@ namespace MatrimonioBackend.Controllers
 
             return Ok(new { original = Original, patched = _mapper.Map<MarryMonioUser, UserGetDTO>(user) });
 
+        }
 
+        [HttpPost("{email}")]
+        public async Task<ActionResult<string>> MakeEmailInvitationLink(string email)
+        {
+            var client = new HttpClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://dev-fnrkz1kw46cdu7zy.us.auth0.com/api/v2/tickets/password-change");
+
+            request.Headers.Add("Accept", "application/json");
+
+
+
+            request.Headers.Add("Authorization", "Bearer "+ _configuration.GetValue<string>("MANAGEMENT_TOKEN"));
+
+            var content = new StringContent("{\"result_url\":\"https://marrymonio.azurewebsites.net\",\"email\": \"" + email +"\",\"connection_id\":\"con_f9M7acTOfS9rtXDF\"}", null, "application/json");
+
+            request.Content = content;
+
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseTxt = await response.Content.ReadAsStringAsync();
+
+            responseTxt += "#type=invite" + "#app=AppName";
+
+            Console.WriteLine(responseTxt);
+
+            return Ok(responseTxt);
+        }
+
+        [HttpGet("{token}")]
+        public async Task<ActionResult<string>> GetToken()
+        {
+            var client = new HttpClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://dev-fnrkz1kw46cdu7zy.us.auth0.com/oauth/token");
+            request.Headers.Add("Accept", "application/json");
+            var client_secret = _configuration.GetValue<string>("CLIENT_SECRET");
+            var client_id = _configuration.GetValue<string>("CLIENT_ID");
+            var contentStr = "{\"client_id\":\"" + $"{client_id}" + "\",\"client_secret\":\"" + $"{client_secret}" + "\",\"audience\":\"https://matrimoniobackend20240430143958.azurewebsites.net\",\"grant_type\":\"client_credentials\"}";
+
+            var content = new StringContent("{\"client_id\":\"" + $"{client_id}" + "\",\"client_secret\":\"" + $"{client_secret}" + "\",\"audience\":\"https://matrimoniobackend20240430143958.azurewebsites.net\",\"grant_type\":\"client_credentials\"}", null, "application/json");
+            request.Content = content;
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseTxt = await response.Content.ReadAsStringAsync();
+
+            return Ok(responseTxt);
 
         }
 
-
+        
 
 
 
