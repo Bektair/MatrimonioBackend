@@ -91,16 +91,16 @@ namespace MatrimonioBackend.Controllers
 
             var existingUser = unitOfWork.UserRepository.Get((user)=> user.Email == createUser.Email);
 
-            if(existingUser == null)
+            if(existingUser != null && existingUser.Count() != 0)
             {
-                unitOfWork.UserRepository.Insert(user);
+                return CreatedAtAction("User allready exsists", _mapper.Map<UserGetDTO>(existingUser));
             }
-
-
+            unitOfWork.UserRepository.Insert(user);
 
             unitOfWork.Save();
 
             return CreatedAtAction("CreateUser", new { id = user.Id }, _mapper.Map<UserGetDTO>(user));
+
         }
 
 
@@ -184,8 +184,14 @@ namespace MatrimonioBackend.Controllers
 
         }
 
-        
 
+        [HttpDelete("")]
+        public ActionResult DeleteUser(Guid id)
+        {
+            unitOfWork.UserRepository.Delete(id);
+            unitOfWork.Save();
+            return NoContent();
+        }
 
 
     }
